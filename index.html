@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>محاسبة النفس</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="liquid-background">
+    <div class="blob-global blob-g-1"></div>
+    <div class="blob-global blob-g-2"></div>
+    <div class="blob-global blob-g-3"></div>
+  </div>
+  
+  <header id="main-header">
+    <div class="container header-content">
+      <div class="logo">
+        <a href="#">
+          <img src="logo.png" alt="">
+        </a>
+      </div>
+
+      <div class="header-actions">
+        <button id="theme-toggle" aria-label="Toggle Dark Mode">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <div class="auth-container">
+          <button id="login-btn" class="btn-primary">تسجيل الدخول</button>
+          <div id="profile-icon" class="profile-icon hidden">
+            <img src="https://ui-avatars.com/api/?name=Mohamed+Hamdy&background=random" alt="Profile">
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="accountability-section">
+      <div class="container">
+        <h1 class="page-title">يَوْمَئِذٍ تُعْرَضُونَ لَا تَخْفَى مِنْكُمْ خَافِيَةٌ</h1>
+
+        <div class="date-toggle-container">
+          <button id="date-toggle-btn" class="date-toggle-btn">
+            <span id="current-date-display"></span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div id="date-dropdown" class="date-dropdown hidden">
+            <div class="month-selector">
+              <button id="prev-month" class="month-nav-btn"><i class="fa-solid fa-chevron-right"></i></button>
+              <span id="current-month-display"></span>
+              <button id="next-month" class="month-nav-btn"><i class="fa-solid fa-chevron-left"></i></button>
+            </div>
+            <div class="days-header">
+              <span>سبت</span><span>أحد</span><span>اثنين</span><span>ثلاثاء</span><span>أربعاء</span><span>خميس</span><span>جمعة</span>
+            </div>
+            <div id="days-grid" class="days-grid"></div>
+          </div>
+        </div>
+
+        <div class="global-progress-container">
+          <div class="progress-label">
+            <span>إنجاز اليوم</span>
+            <span id="total-score">0%</span>
+          </div>
+          <div class="progress-track">
+            <div id="global-progress-bar" class="progress-fill" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="prayers-container">
+
+          <div class="prayer-item" id="fajr-card" data-aos="fade-up">
+            <span class="prayer-name">الفجر</span>
+            <div class="prayer-content-grid">
+              <div class="task-box">
+                <h4 class="box-title">الصلاة</h4>
+                <button class="task-btn prayer-btn" data-points="3">صلاة في المسجد (3 نقاط)</button>
+                <button class="task-btn prayer-btn" data-points="2">على الوقت في البيت (2 نقطة)</button>
+                <button class="task-btn prayer-btn" data-points="1">تأخرت ولكن داخل وقتها (1 نقطة)</button>
+              </div>
+              <div class="task-box">
+                <h4 class="box-title">أذكار بعد الصلاة</h4>
+                <button class="task-btn action-btn" onclick="openAdhkar('post_fajr')">عرض الأذكار (2 نقطة)</button>
+                <div class="adhkar-progress-track">
+                  <div class="adhkar-progress-fill" id="progress-post_fajr" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="task-box">
+                <h4 class="box-title">أذكار الصباح</h4>
+                <button class="task-btn action-btn" onclick="openAdhkar('morning')">عرض الأذكار (2 نقطة)</button>
+                <button class="task-btn toggle-btn" data-points="2">صلاة الضحى - 4 ركعات (2 نقطة)</button>
+                <div class="adhkar-progress-track">
+                  <div class="adhkar-progress-fill" id="progress-morning" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="task-box">
+                <h4 class="box-title">سنن الصلاة</h4>
+                <button class="task-btn toggle-btn" data-points="2">سنة الفجر القبلية (2 نقطة)</button>
+              </div>
+              <div class="task-box">
+                <h4 class="box-title">أذكار الاستيقاظ</h4>
+                <button class="task-btn action-btn" onclick="openAdhkar('wakeup')">عرض الأذكار (2 نقطة)</button>
+                <div class="adhkar-progress-track">
+                  <div class="adhkar-progress-fill" id="progress-wakeup" style="width: 0%"></div>
+                </div>
+              </div>
+              <button class="add-prayer-extra-btn" data-prayer="fajr">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="prayer-item" id="dhuhr-card" data-aos="fade-up">
+            <span class="prayer-name">الظهر</span>
+            <div class="prayer-content-grid">
+              <div class="task-box">
+                <h4 class="box-title">الصلاة</h4>
+                <button class="task-btn prayer-btn" data-points="3">صلاة في المسجد (3 نقاط)</button>
+                <button class="task-btn prayer-btn" data-points="2">على الوقت في البيت (2 نقطة)</button>
+                <button class="task-btn prayer-btn" data-points="1">تأخرت ولكن داخل وقتها (1 نقطة)</button>
+              </div>
+              <div class="task-box">
+                <h4 class="box-title">أذكار بعد الصلاة</h4>
+                <button class="task-btn action-btn" onclick="openAdhkar('post_dhuhr')">عرض الأذكار (2 نقطة)</button>
+                <div class="adhkar-progress-track">
+                  <div class="adhkar-progress-fill" id="progress-post_dhuhr" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="task-box">
+                <h4 class="box-title">سنن الصلاة</h4>
+                <button class="task-btn toggle-btn" data-points="2">سنة قبلية - 4 ركعات (2 نقطة)</button>
+                <button class="task-btn toggle-btn" data-points="2">سنة بعدية - ركعتين (2 نقطة)</button>
+              </div>
+              <button class="add-prayer-extra-btn" data-prayer="dhuhr">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="prayer-item" id="asr-card" data-aos="fade-up">
+            <span class="prayer-name">العصر</span>
+            <div class="prayer-content-grid">
+              <div class="task-box">
+                <h4 class="box-title">الصلاة</h4>
+                <button class="task-btn prayer-btn" data-points="3">صلاة في المسجد (3 نقاط)</button>
+                <button class="task-btn prayer-btn" data-points="2">على الوقت في البيت (2 نقطة)</button>
+                <button class="task-btn prayer-btn" data-points="1">تأخرت ولكن داخل وقتها (1 نقطة)</button>
+              </div>
+              <div class="task-box">
+                <h4 class="box-title">أذكار بعد الصلاة</h4>
+                <button class="task-btn action-btn" onclick="openAdhkar('post_asr')">عرض الأذكار (2 نقطة)</button>
+                <div class="adhkar-progress-track">
+                  <div class="adhkar-progress-fill" id="progress-post_asr" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="task-box">
+                <h4 class="box-title">أذكار المساء</h4>
+                <button class="task-btn action-btn" onclick="openAdhkar('evening')">عرض الأذكار (2 نقطة)</button>
+                <div class="adhkar-progress-track">
+                  <div class="adhkar-progress-fill" id="progress-evening" style="width: 0%"></div>
+                </div>
+              </div>
+              <button class="add-prayer-extra-btn" data-prayer="asr">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="prayer-item" id="maghrib-card" data-aos="fade-up">
+            <span class="prayer-name">المغرب</span>
+            <div class="prayer-content-grid">
+              <div class="task-box">
+                <h4 class="box-title">الصلاة</h4>
+                <button class="task-btn prayer-btn" data-points="3">صلاة في المسجد (3 نقاط)</button>
+                <button class="task-btn prayer-btn" data-points="2">على الوقت في البيت (2 نقطة)</button>
+                <button class="task-btn prayer-btn" data-points="1">تأخرت ولكن داخل وقتها (1 نقطة)</button>
+              </div>
+              <div class="task-box">
+                <h4 class="box-title">أذكار بعد الصلاة</h4>
+                <button class="task-btn action-btn" onclick="openAdhkar('post_maghrib')">عرض الأذكار (2 نقطة)</button>
+                <div class="adhkar-progress-track">
+                  <div class="adhkar-progress-fill" id="progress-post_maghrib" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="task-box">
+                <h4 class="box-title">سنن الصلاة</h4>
+                <button class="task-btn toggle-btn" data-points="2">سنة بعدية (2 نقطة)</button>
+              </div>
+              <button class="add-prayer-extra-btn" data-prayer="maghrib">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="prayer-item" id="isha-card" data-aos="fade-up">
+            <span class="prayer-name">العشاء</span>
+            <div class="prayer-content-grid">
+              <div class="task-box">
+                <h4 class="box-title">الصلاة</h4>
+                <button class="task-btn prayer-btn" data-points="3">صلاة في المسجد (3 نقاط)</button>
+                <button class="task-btn prayer-btn" data-points="2">على الوقت في البيت (2 نقطة)</button>
+                <button class="task-btn prayer-btn" data-points="1">تأخرت ولكن داخل وقتها (1 نقطة)</button>
+              </div>
+              <div class="task-box">
+                <h4 class="box-title">أذكار بعد الصلاة</h4>
+                <button class="task-btn action-btn" onclick="openAdhkar('post_isha')">عرض الأذكار (2 نقطة)</button>
+                <div class="adhkar-progress-track">
+                  <div class="adhkar-progress-fill" id="progress-post_isha" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="task-box">
+                <h4 class="box-title">سنن الصلاة</h4>
+                <button class="task-btn toggle-btn" data-points="2">سنة بعدية (2 نقطة)</button>
+              </div>
+              <button class="add-prayer-extra-btn" data-prayer="isha">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <section class="ibadat-section" data-aos="fade-up">
+      <div class="container">
+        <div class="prayer-item">
+          <span class="prayer-name">ركن العبادات</span>
+          <div class="prayer-content-grid">
+            <div class="task-box full-width-box">
+              <h4 class="box-title">نوافل ومهام</h4>
+              <div class="ibadat-grid" id="ibadat-grid">
+                <div class="ibada-box" data-id="qiyam" data-points="4">
+                  <h3 class="ibada-title">قيام الليل (4 نقاط)</h3>
+                  <div class="ibada-status"></div>
+                </div>
+                <div class="ibada-box" data-id="witr" data-points="2">
+                  <h3 class="ibada-title">ركعة الوتر (2 نقطة)</h3>
+                  <div class="ibada-status"></div>
+                </div>
+                <div class="ibada-box" data-id="quran" data-points="4">
+                  <h3 class="ibada-title">ورد القرآن - ربعين (4 نقاط)</h3>
+                  <div class="ibada-status"></div>
+                </div>
+                <button id="add-worship-btn" class="add-worship-btn">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="add-worship-modal" class="modal-overlay hidden">
+    <div class="liquid-modal">
+      <div class="modal-header">
+        <h3>إضافة عبادة جديدة</h3>
+        <button id="close-worship-modal" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="worship-name">اسم العبادة</label>
+          <input type="text" id="worship-name" placeholder="مثال: الصيام ">
+        </div>
+        <div class="form-group">
+          <label for="worship-time">وقت التنفيذ</label>
+          <input type="text" id="worship-time" placeholder="مثال: الإثنين والخميس ">
+        </div>
+        <div class="form-group">
+          <label for="worship-points">عدد النقاط</label>
+          <select id="worship-points" class="glass-input">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="save-worship-btn" class="btn-primary">حفظ</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="adhkar-modal" class="adhkar-modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">الأذكار</h3>
+        <button id="close-modal" class="close-btn">&times;</button>
+      </div>
+      <div id="adhkar-list" class="adhkar-list no-scrollbar"></div>
+      <div class="modal-footer">
+        <button id="complete-adhkar-btn" class="btn-primary">إتمام</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="extra-prayer-modal" class="modal-overlay hidden">
+    <div class="liquid-modal">
+      <div class="modal-header">
+        <h3>إضافة نافلة</h3>
+        <button id="close-extra-modal" class="close-btn">&times;</button>
+      </div>
+      <div id="extra-worship-list" class="adhkar-list no-scrollbar"></div>
+    </div>
+  </div>
+
+  <section class="warning-section" data-aos="fade-up">
+    <div class="container">
+      <div class="prayer-item warning-container">
+        <span class="prayer-name" style="color: #ef4444; border-color: #ef4444;">احذر المهلكات</span>
+        
+        <div class="warning-grid">
+          <div class="warning-box" onclick="openWarning('lying')">
+              <i class="fa-solid fa-comment-slash warning-icon"></i>
+              <h3 class="warning-title">الكذب</h3>
+          </div>
+
+          <div class="warning-box" onclick="openWarning('backbiting')">
+              <i class="fa-solid fa-users-slash warning-icon"></i>
+              <h3 class="warning-title">الغيبة</h3>
+          </div>
+
+          <div class="warning-box" onclick="openWarning('gazing')">
+              <i class="fa-solid fa-eye-slash warning-icon"></i>
+              <h3 class="warning-title">إطلاق البصر</h3>
+          </div>
+
+          <div class="warning-box" onclick="openWarning('cursing')">
+              <i class="fa-solid fa-face-angry warning-icon"></i>
+              <h3 class="warning-title">السب واللعن</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="warning-modal" class="modal-overlay hidden">
+      <div class="liquid-modal warning-modal-content">
+          <div class="modal-header">
+              <h3 id="warning-modal-title" style="color: #ef4444;">عنوان التحذير</h3>
+              <button id="close-warning-modal" class="close-btn">&times;</button>
+          </div>
+          <div class="modal-body warning-body">
+              <div class="quran-quote">
+                  <i class="fa-solid fa-quran"></i>
+                  <p id="warning-quran"></p>
+              </div>
+              <div class="hadith-quote">
+                  <i class="fa-solid fa-scroll"></i>
+                  <p id="warning-hadith"></p>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <section class="reflection-section" data-aos="fade-up">
+    <div class="container">
+      <div class="prayer-item">
+        <div class="reflection-header">
+            <h3 id="reflection-title" class="box-title" style="font-size: 1.4rem; margin-bottom: 0.5rem;">ما سبب هذا التقصير اليوم؟</h3>
+            <p class="reflection-hint">
+                الهدف ليس الجلد، بل الفهم. دون هنا ما أعانك لتكرره، أو ما شغلك لتتجنبه.
+            </p>
+        </div>
+        
+        <textarea id="reflection-input" class="glass-textarea" placeholder="اكتب خواطرك عن يومك هنا... (مثلاً: نمت متأخراً ففاتني الفجر، أو صحبة صالحة شجعتني...)"></textarea>
+        
+        <button id="download-report-btn" class="btn-primary" style="width: 100%; margin-top: 1.5rem;">
+            <i class="fa-solid fa-file-word"></i> حفظ وتنزيل التقرير
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-wrapper">
+    <footer class="container glass-footer">
+      <div class="footer-brand">
+        <h3><img src="logo.png" alt="Logo"></h3>
+        <p>صنعت لوجه الله تعالى بواسطة محمد حمدي، نسألكم الدعاء</p>
+      </div>
+      <div class="social-links">
+        <a href="https://www.facebook.com/mohamdahmedhhamdi/" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/m.7amdy/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/mohamdahmedhamdi/" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
