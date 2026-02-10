@@ -2560,3 +2560,64 @@ main {
     background: transparent !important;
     border: 1px solid var(--glass-border) !important;
 }
+
+/* ================================================== */
+/* إصلاح شفافية الخلفيات على الموبايل (للقراءة الواضحة) */
+/* ================================================== */
+
+@media (max-width: 768px) {
+    
+    /* 1. تحويل الخلفيات الزجاجية إلى خلفيات مصمتة (Solid) */
+    .prayer-item, 
+    .glass-footer, 
+    .liquid-modal, 
+    .modal-content, 
+    .date-dropdown,
+    .adhkar-item,
+    .bonus-card {
+        /* إلغاء الشفافية تماماً واستخدام لون الخلفية الأساسي */
+        background-color: var(--bg-primary) !important;
+        /* إضافة ظل خفيف جداً لتمييز الكارت عن الخلفية */
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+        /* التأكد من عدم وجود شفافية */
+        backdrop-filter: none !important;
+        opacity: 1 !important; 
+        z-index: 10; /* رفع العنصر فوق الخلفية المتحركة */
+    }
+
+    /* 2. تخصيص قسم المهلكات (عشان لونه أحمر) */
+    .warning-box {
+        /* لون خلفية مصمت تماماً (غير شفاف) */
+        background-color: var(--bg-primary) !important; 
+        /* الحفاظ على الإطار الأحمر */
+        border: 1px solid #ef4444 !important;
+        z-index: 10;
+    }
+
+    /* 3. تخصيص صناديق المهام والعبادات */
+    .task-box, .ibada-box {
+        background-color: var(--bg-primary) !important;
+        border: 1px solid var(--glass-border) !important;
+    }
+
+    /* ========================================= */
+    /* ألوان مخصصة للوضع النهاري والليلي (لضمان الوضوح) */
+    /* ========================================= */
+
+    /* في الوضع الفاتح (Light Mode) -> اجعل الكروت بيضاء تماماً */
+    html[data-theme="light"] .prayer-item,
+    html[data-theme="light"] .liquid-modal,
+    html[data-theme="light"] .warning-box,
+    html[data-theme="light"] .bonus-card {
+        background-color: #ffffff !important;
+    }
+
+    /* في الوضع الليلي (Dark Mode) -> اجعل الكروت رمادي غامق مصمت */
+    html[data-theme="dark"] .prayer-item,
+    html[data-theme="dark"] .liquid-modal,
+    html[data-theme="dark"] .warning-box,
+    html[data-theme="dark"] .bonus-card {
+        background-color: #1e293b !important; /* لون Slate غامق مريح للعين */
+        border-color: rgba(255,255,255,0.1) !important;
+    }
+}
