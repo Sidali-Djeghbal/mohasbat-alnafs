@@ -1,10 +1,12 @@
-const CACHE_VERSION = 'mohasbat-v2';
+const CACHE_VERSION = 'mohasbat-v8';
 const STATIC_ASSETS = [
   '.',
   'index.html',
-  'style.css',
-  'script.js',
-  'logo.png',
+  'assets/css/main.css',
+  'assets/js/app.js',
+  'assets/js/config/firebase-config.js',
+  'assets/js/sw-register.js',
+  'assets/images/logo.png',
   'manifest.json',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
   'https://unpkg.com/aos@2.3.1/dist/aos.css',

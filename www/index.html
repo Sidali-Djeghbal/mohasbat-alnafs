@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#4f46e5">
   <title>محاسبة النفس</title>
-  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
   <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,8 +17,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="assets/css/main.css">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
@@ -34,7 +35,7 @@
     <div class="container header-content">
       <div class="logo">
         <a href="#">
-          <img src="logo.png" alt="">
+          <img src="assets/images/logo.png" alt="">
         </a>
       </div>
 
@@ -81,7 +82,7 @@
               <div class="auth-container">
                   <button id="login-btn" class="btn-primary">تسجيل الدخول</button>
                   <div id="profile-icon" class="profile-icon hidden">
-                      <img src="logo.png" alt="Profile">
+                      <img src="assets/images/logo.png" alt="Profile">
                   </div>
               </div>
 
@@ -94,7 +95,7 @@
 
   <main>
 
-    <section id="bonus-section" class="container hidden" style="margin-top: 1rem; margin-bottom: 1rem;">
+    <section id="bonus-section" class="container hidden mobile-page-section" data-mobile-page="home" style="margin-top: 1rem; margin-bottom: 1rem;">
         <div class="bonus-card" data-aos="fade-down">
             <div class="bonus-icon">
                 <i class="fa-solid fa-star"></i>
@@ -109,7 +110,7 @@
         </div>
     </section>
 
-    <section class="accountability-section">
+    <section id="section-daily" class="accountability-section mobile-page-section" data-mobile-page="home">
       <div class="container">
         <h2 id="daily-verse" class="page-title"></h2>
         <div class="date-toggle-container">
@@ -158,11 +159,11 @@
             <div id="global-progress-bar" class="progress-fill" style="width: 0%"></div>
           </div>
         </div>
-        <!-- Settings -->
         <div id="setup-modal" class="modal-overlay hidden" style="z-index: 3000;">
           <div class="liquid-modal">
               <div class="modal-header">
                   <h3>إعداد حسابك</h3>
+                  <button id="close-setup-modal" class="close-btn" aria-label="إغلاق">&times;</button>
               </div>
               <div class="modal-body">
                   <p style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.9rem;">لنخصص التجربة لك، نحتاج لبعض البيانات.</p>
@@ -406,7 +407,7 @@
       </div>
     </section>
 
-    <section class="ibadat-section" data-aos="fade-up">
+    <section id="section-ibadat" class="ibadat-section mobile-page-section" data-mobile-page="ibadat" data-aos="fade-up">
       <div class="container">
         <div class="prayer-item">
           <span class="prayer-name">ركن العبادات</span>
@@ -491,7 +492,7 @@
     </div>
   </div>
 
-  <section class="warning-section" data-aos="fade-up">
+  <section id="section-warnings" class="warning-section mobile-page-section" data-mobile-page="warnings" data-aos="fade-up">
     <div class="container">
       <div class="prayer-item warning-container">
         <span class="prayer-name" style="color: #ef4444; border-color: #ef4444;">احذر المهلكات "لكل مهلكة قصة ومن كل قصة عظة، فاتعظ!"</span>
@@ -562,7 +563,7 @@
     </div>
 </div>
 
-  <section class="reflection-section" data-aos="fade-up">
+  <section id="section-reflection" class="reflection-section mobile-page-section" data-mobile-page="home" data-aos="fade-up">
     <div class="container">
       <div class="prayer-item">
         <div class="reflection-header">
@@ -580,7 +581,7 @@
       </div>
     </div>
   </section>
-  <section id="analytics-section" class="accountability-section" data-aos="fade-up">
+  <section id="analytics-section" class="accountability-section mobile-page-section" data-mobile-page="analytics" data-aos="fade-up">
     <div class="container">
       <div class="prayer-item" style="border-color: var(--accent-color);">
         
@@ -724,27 +725,41 @@
     </div>
   </section>
 
-  <div class="footer-wrapper">
+  <div class="footer-wrapper mobile-page-section" data-mobile-page="home">
     <footer class="container glass-footer">
       <div class="footer-brand">
-        <h3><img src="logo.png" alt="Logo"></h3>
-        <p>
-          صنعت لوجه الله تعالى بواسطة
-          <a href="https://www.linkedin.com/in/mohamdahmedhamdi/" target="_blank" rel="noopener noreferrer">محمد حمدي</a>
-          و
-          <a href="https://linkedin.com/in/sidali-djeghbal" target="_blank" rel="noopener noreferrer">سيدعلي</a>،
-          نسألكم الدعاء
-        </p>
+        <h3><img src="assets/images/logo.png" alt="Logo"></h3>
+        <p class="footer-note">لا تنسونا من صالح دعائكم</p>
       </div>
     </footer>
   </div>
+
+  <nav id="mobile-app-nav" class="mobile-app-nav" aria-label="شريط التنقل السفلي">
+    <span id="mobile-nav-indicator" class="mobile-nav-indicator" aria-hidden="true"></span>
+    <button class="mobile-nav-item active" data-page="home" aria-label="الرئيسية">
+      <i class="fa-solid fa-house"></i>
+      <span>الرئيسية</span>
+    </button>
+    <button class="mobile-nav-item" data-page="ibadat" aria-label="العبادات">
+      <i class="fa-solid fa-list-check"></i>
+      <span>العبادات</span>
+    </button>
+    <button class="mobile-nav-item" data-page="warnings" aria-label="المهلكات">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span>المهلكات</span>
+    </button>
+    <button class="mobile-nav-item" data-page="analytics" aria-label="الإحصائيات">
+      <i class="fa-solid fa-chart-pie"></i>
+      <span>الإحصائيات</span>
+    </button>
+  </nav>
 
   <div id="report-template-container" style="position: absolute; left: -9999px; top: 0; width: 800px;">
   <div id="pdf-content" class="pdf-page">
     
     <div class="pdf-header">
       <div class="header-logo">
-        <img src="logo.png" alt="Logo" style="height: 60px;"> </div>
+        <img src="assets/images/logo.png" alt="Logo" style="height: 60px;"> </div>
       <div class="header-info">
         <h1 class="pdf-title">تقرير حصاد الأعمال</h1>
         <p class="pdf-subtitle" id="pdf-period-text">تقرير أسبوعي | من ... إلى ...</p>
@@ -833,22 +848,14 @@
 
 
 
+  <script src="assets/js/config/firebase-config.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js" defer></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
-  <script src="script.js" defer></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
-<script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js').catch(() => {
-          // Ignore SW errors to avoid blocking app startup.
-        });
-      });
-    }
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+  <script src="assets/js/app.js" defer></script>
+  <script src="assets/js/sw-register.js" defer></script>
 </body>
 
 
