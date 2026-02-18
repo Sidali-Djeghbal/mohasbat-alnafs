@@ -1,11 +1,11 @@
 window.APP_CONFIG = {
     firebase: {
-        apiKey: "AIzaSyCWxA20225RrmIfDiccdGv12okplTM_AbY",
-        authDomain: "mouhasabat-nafs.firebaseapp.com",
-        projectId: "mouhasabat-nafs",
-        storageBucket: "mouhasabat-nafs.firebasestorage.app",
-        messagingSenderId: "152745146408",
-        appId: "1:152745146408:web:db9fcd9e2273a7608a9d1d",
-        measurementId: "G-2S088E31FJ"
+        apiKey: "REPLACE_WITH_NEW_FIREBASE_API_KEY",
+        authDomain: "REPLACE_WITH_NEW_FIREBASE_AUTH_DOMAIN",
+        projectId: "REPLACE_WITH_NEW_FIREBASE_PROJECT_ID",
+        storageBucket: "REPLACE_WITH_NEW_FIREBASE_STORAGE_BUCKET",
+        messagingSenderId: "REPLACE_WITH_NEW_FIREBASE_MESSAGING_SENDER_ID",
+        appId: "REPLACE_WITH_NEW_FIREBASE_APP_ID",
+        measurementId: "REPLACE_WITH_NEW_FIREBASE_MEASUREMENT_ID"
     }
 };
