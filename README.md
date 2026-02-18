@@ -4,12 +4,12 @@
   <p>منصة عملية لمتابعة العبادات اليومية، بقياس واضح، وتحليل مستمر، وتجربة متكاملة على الويب وAndroid.</p>
 
   <p>
-    <img src="https://img.shields.io/badge/Platforms-Web%20%7C%20Android-0f172a?style=for-the-badge" alt="المنصات" />
-    <img src="https://img.shields.io/badge/Capacitor-v5-119EFF?style=for-the-badge&logo=capacitor&logoColor=white" alt="Capacitor" />
-    <img src="https://img.shields.io/badge/Firebase-Auth%20%2B%20Firestore-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase" />
-    <img src="https://img.shields.io/badge/PWA-Offline%20Ready-2563eb?style=for-the-badge" alt="PWA" />
-    <img src="https://img.shields.io/badge/Netlify-Ready-00C7B7?style=for-the-badge&logo=netlify&logoColor=white" alt="Netlify" />
-    <img src="https://img.shields.io/badge/Android-Home%20Widget-15803d?style=for-the-badge&logo=android&logoColor=white" alt="Android Widget" />
+    <img src="https://img.shields.io/badge/Platform-Web%20%7C%20Android-111827?style=flat-square&logo=googlechrome&logoColor=white" alt="المنصات" />
+    <img src="https://img.shields.io/badge/Capacitor-v5-2563eb?style=flat-square&logo=capacitor&logoColor=white" alt="Capacitor" />
+    <img src="https://img.shields.io/badge/Firebase-Auth%20%2B%20Firestore-f59e0b?style=flat-square&logo=firebase&logoColor=white" alt="Firebase" />
+    <img src="https://img.shields.io/badge/PWA-Offline%20Ready-0ea5e9?style=flat-square&logo=pwa&logoColor=white" alt="PWA" />
+    <img src="https://img.shields.io/badge/Deploy-Netlify-14b8a6?style=flat-square&logo=netlify&logoColor=white" alt="Netlify" />
+    <img src="https://img.shields.io/badge/Android-Home%20Widget-16a34a?style=flat-square&logo=android&logoColor=white" alt="Android Widget" />
   </p>
 </div>
 
