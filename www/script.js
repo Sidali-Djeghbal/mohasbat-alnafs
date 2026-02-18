@@ -1,5 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    const isNativePlatform = () => {
+        return !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
+    };
+
+    const getLocalNotifications = () => {
+        return window.Capacitor && window.Capacitor.Plugins ? window.Capacitor.Plugins.LocalNotifications : null;
+    };
+
+    const getWidgetBridge = () => {
+        return window.Capacitor && window.Capacitor.Plugins ? window.Capacitor.Plugins.WidgetBridge : null;
+    };
+
         // --- AOS Init ---
     if (typeof AOS !== 'undefined') {
         AOS.init({
@@ -221,16 +233,33 @@ function updateHeaderOnScroll() {
 
     // --- 2. دالة تسجيل الدخول (معدلة للفحص) ---
     loginBtn.addEventListener('click', () => {
-        auth.signInWithPopup(provider)
-            .then((result) => {
-                const user = result.user;
-                // لا نحدث الواجهة مباشرة، بل نفحص البروفايل أولاً
-                checkUserProfile(user);
-            }).catch((error) => {
+        if (isNativePlatform()) {
+            auth.signInWithRedirect(provider).catch((error) => {
                 console.error("Error:", error.message);
                 alert("حدث خطأ أثناء تسجيل الدخول: " + error.message);
             });
+        } else {
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    // لا نحدث الواجهة مباشرة، بل نفحص البروفايل أولاً
+                    checkUserProfile(user);
+                }).catch((error) => {
+                    console.error("Error:", error.message);
+                    alert("حدث خطأ أثناء تسجيل الدخول: " + error.message);
+                });
+        }
     });
+
+    if (isNativePlatform()) {
+        auth.getRedirectResult().then((result) => {
+            if (result && result.user) {
+                checkUserProfile(result.user);
+            }
+        }).catch((error) => {
+            console.error("Redirect error:", error.message);
+        });
+    }
 
     // --- 3. دالة تسجيل الخروج ---
     profileIcon.addEventListener('click', () => {
@@ -257,6 +286,8 @@ function updateHeaderOnScroll() {
     });
 
 function updateUI(user) {
+    const defaultProfileImage = 'logo.png';
+
     if (user) {
         loginBtn.classList.add('hidden');
         profileIcon.classList.remove('hidden');
@@ -265,8 +296,8 @@ function updateUI(user) {
         if(settingsBtn) settingsBtn.classList.remove('hidden');
 
         const img = profileIcon.querySelector('img');
-        if (img && user.photoURL) {
-            img.src = user.photoURL;
+        if (img) {
+            img.src = user.photoURL || defaultProfileImage;
         }
     } else {
         profileIcon.classList.add('hidden');
@@ -274,6 +305,11 @@ function updateUI(user) {
         
         // إخفاء زر الإعدادات
         if(settingsBtn) settingsBtn.classList.add('hidden');
+
+        const img = profileIcon.querySelector('img');
+        if (img) {
+            img.src = defaultProfileImage;
+        }
     }
 }
 
@@ -379,6 +415,7 @@ if (saveSetupBtn) {
             .then(() => {
                 // حفظ محلي أيضاً للسرعة
                 localStorage.setItem('notification_settings', JSON.stringify(notificationSettings));
+                refreshNotificationSchedules();
                 
                 setupModal.classList.add('hidden');
                 applyUserProfileSettings(); 
@@ -432,6 +469,8 @@ function checkUserProfile(user) {
             localStorage.setItem('notification_settings', JSON.stringify(notificationSettings));
         }
 
+        refreshNotificationSchedules();
+
     }).catch(err => console.error("Error fetching user data:", err));
 }
 
@@ -481,6 +520,7 @@ function initPrayerTimes(lat, long) {
             // 1. الكود القديم (حساب المواقيت والعد التنازلي) - لم نلمسه
             prayerTimesData = data.data.timings;
             startCountdown();
+            schedulePrayerNotifications();
 
             // ---------------------------------------------------
             // 2. الإضافة الجديدة (استخراج التاريخ وتشغيل البونص)
@@ -1030,6 +1070,194 @@ function getDateKey(date) {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
 
+function getWidgetPendingCount() {
+    let pending = 0;
+
+    // الصلوات: الكارت الذي لا يحتوي اختيار صلاة فعّال يعتبر متبقياً.
+    document.querySelectorAll('.prayer-item').forEach(card => {
+        const prayerBox = card.querySelector('.task-box');
+        if (!prayerBox) return;
+
+        const prayerButtons = Array.from(prayerBox.querySelectorAll('.prayer-btn'))
+            .filter(btn => window.getComputedStyle(btn).display !== 'none');
+        if (prayerButtons.length === 0) return;
+
+        if (!prayerBox.querySelector('.prayer-btn.active')) {
+            pending += 1;
+        }
+    });
+
+    // أذكار: كل نوع لم يكتمل بعد.
+    ADHKAR_TYPES.forEach(type => {
+        const progress = document.getElementById(`progress-${type}`);
+        if (progress && progress.style.width !== '100%') {
+            pending += 1;
+        }
+    });
+
+    // قرآن: أي عبادة قرآنية غير منجزة.
+    document.querySelectorAll('.ibada-box').forEach(box => {
+        const title = box.querySelector('.ibada-title')?.textContent || '';
+        if (title.includes('قرآن') && !box.classList.contains('done')) {
+            pending += 1;
+        }
+    });
+
+    return pending;
+}
+
+function syncWidgetStatsToNative() {
+    if (!isNativePlatform()) return;
+
+    const widgetBridge = getWidgetBridge();
+    if (!widgetBridge || typeof widgetBridge.updateHomeWidget !== 'function') return;
+
+    try {
+        const scoreData = calculateScoreAndSummary();
+        const pending = getWidgetPendingCount();
+        widgetBridge.updateHomeWidget({
+            score: scoreData.percentage,
+            pending: pending
+        }).catch(() => {});
+    } catch (e) {
+        // تجاهل أخطاء المزامنة حتى لا تؤثر على تجربة الاستخدام.
+    }
+}
+
+function markNextPrayerAsDoneFromWidget() {
+    const prayerCards = Array.from(document.querySelectorAll('.prayer-item'));
+
+    for (const card of prayerCards) {
+        const prayerBox = card.querySelector('.task-box');
+        if (!prayerBox) continue;
+        if (prayerBox.querySelector('.prayer-btn.active')) continue;
+
+        const prayerButtons = Array.from(prayerBox.querySelectorAll('.prayer-btn'))
+            .filter(btn => window.getComputedStyle(btn).display !== 'none');
+
+        if (prayerButtons.length === 0) continue;
+
+        const bestButton = prayerButtons.reduce((best, current) => {
+            const bestPoints = parseInt(best.getAttribute('data-points') || '0', 10);
+            const currentPoints = parseInt(current.getAttribute('data-points') || '0', 10);
+            return currentPoints > bestPoints ? current : best;
+        }, prayerButtons[0]);
+
+        prayerButtons.forEach(btn => {
+            if (btn !== bestButton) btn.classList.remove('active');
+        });
+        bestButton.classList.add('active');
+        return true;
+    }
+
+    return false;
+}
+
+function markQuranAsDoneFromWidget() {
+    const quranBox = Array.from(document.querySelectorAll('.ibada-box')).find(box => {
+        const title = box.querySelector('.ibada-title')?.textContent || '';
+        return title.includes('قرآن') && !box.classList.contains('done');
+    });
+
+    if (!quranBox) return false;
+
+    quranBox.classList.add('done');
+    return true;
+}
+
+function markAdhkarAsDoneFromWidget() {
+    for (const type of ADHKAR_TYPES) {
+        const progress = document.getElementById(`progress-${type}`);
+        if (!progress || progress.style.width === '100%') continue;
+
+        progress.style.width = '100%';
+        const btn = document.querySelector(`button[onclick="openAdhkar('${type}')"]`);
+        if (btn) btn.classList.add('completed');
+        return true;
+    }
+
+    return false;
+}
+
+function applyWidgetQuickAction(action) {
+    let changed = false;
+
+    if (action === 'prayer') {
+        changed = markNextPrayerAsDoneFromWidget();
+        if (changed) saveData();
+    } else if (action === 'quran') {
+        changed = markQuranAsDoneFromWidget();
+        if (changed) saveIbadatData();
+    } else if (action === 'adhkar') {
+        changed = markAdhkarAsDoneFromWidget();
+        if (changed) saveData();
+    }
+
+    if (!changed) {
+        syncWidgetStatsToNative();
+    }
+}
+
+function parseWidgetActionFromEvent(event) {
+    if (!event) return '';
+
+    const detail = event.detail;
+    if (!detail) return '';
+
+    if (typeof detail === 'object') {
+        return detail.action || '';
+    }
+
+    if (typeof detail === 'string') {
+        try {
+            const parsed = JSON.parse(detail);
+            return parsed.action || '';
+        } catch (_) {
+            return '';
+        }
+    }
+
+    return '';
+}
+
+function clearPendingWidgetAction() {
+    const widgetBridge = getWidgetBridge();
+    if (!widgetBridge || typeof widgetBridge.consumePendingQuickAction !== 'function') return;
+
+    widgetBridge.consumePendingQuickAction().catch(() => {});
+}
+
+async function initializeWidgetBridge() {
+    if (!isNativePlatform()) return;
+
+    const widgetBridge = getWidgetBridge();
+    if (!widgetBridge) return;
+
+    window.addEventListener('widgetQuickAction', (event) => {
+        const action = parseWidgetActionFromEvent(event);
+        if (!action) return;
+
+        applyWidgetQuickAction(action);
+        clearPendingWidgetAction();
+    });
+
+    syncWidgetStatsToNative();
+
+    if (typeof widgetBridge.getPendingQuickAction !== 'function') return;
+
+    try {
+        const result = await widgetBridge.getPendingQuickAction();
+        const action = result && result.action ? String(result.action) : '';
+
+        if (action) {
+            applyWidgetQuickAction(action);
+            clearPendingWidgetAction();
+        }
+    } catch (_) {
+        // تجاهل أخطاء القراءة للحفاظ على عمل التطبيق بشكل طبيعي.
+    }
+}
+
 
     // --- Mobile Menu Logic ---
 const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -1101,6 +1329,8 @@ function saveData() {
     if (window.radarChartInstance || window.lineChartInstance) {
         updateCharts(document.querySelector('.filter-btn.active')?.textContent === 'شهري' ? 'month' : 'week');
     }
+
+    syncWidgetStatsToNative();
 }
 
     // --- تحديث دالة حفظ عبادات الركن (عشان تسمع في الإحصائيات) ---
@@ -1401,6 +1631,8 @@ function saveExtras() {
     if (document.getElementById('analytics-section')) {
         updateCharts('week'); 
     }
+
+    syncWidgetStatsToNative();
 }
     function loadIbadatData() {
         const key = `ibadat_data_${getDateKey(currentDate)}`;
@@ -1896,6 +2128,14 @@ function saveExtras() {
     //  نظام الإشعارات والتنبيهات الذكي
     // =========================================
 
+    const notificationIds = {
+        morning: 1001,
+        evening: 1002,
+        wird: 1003,
+        tomorrow: 1004,
+        prayerBase: 1100
+    };
+
     // 1. تعريف متغيرات الإعدادات الافتراضية
     let notificationSettings = {
         enabled: false,
@@ -1904,25 +2144,137 @@ function saveExtras() {
         wirdTime: '21:00'
     };
 
+    async function requestNotificationPermission() {
+        if (isNativePlatform()) {
+            const localNotifications = getLocalNotifications();
+            if (!localNotifications) return false;
+            const result = await localNotifications.requestPermissions();
+            return result && result.display === 'granted';
+        }
+
+        if (!('Notification' in window)) return false;
+        const permission = await Notification.requestPermission();
+        return permission === 'granted';
+    }
+
+    function parseTimeToParts(timeStr) {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        return { hours, minutes };
+    }
+
+    async function scheduleDailyNotifications() {
+        if (!isNativePlatform() || !notificationSettings.enabled) return;
+        const localNotifications = getLocalNotifications();
+        if (!localNotifications) return;
+
+        const morning = parseTimeToParts(notificationSettings.morningTime);
+        const evening = parseTimeToParts(notificationSettings.eveningTime);
+        const wird = parseTimeToParts(notificationSettings.wirdTime);
+
+        try {
+            await localNotifications.cancel({
+                notifications: [
+                    { id: notificationIds.morning },
+                    { id: notificationIds.evening },
+                    { id: notificationIds.wird },
+                    { id: notificationIds.tomorrow }
+                ]
+            });
+        } catch (err) {
+            console.warn('Notification cancel error:', err);
+        }
+
+        await localNotifications.schedule({
+            notifications: [
+                {
+                    id: notificationIds.morning,
+                    title: 'أذكار الصباح',
+                    body: 'بداية يوم مبارك بذكر الله.',
+                    schedule: { on: { hour: morning.hours, minute: morning.minutes }, repeats: true }
+                },
+                {
+                    id: notificationIds.evening,
+                    title: 'أذكار المساء',
+                    body: 'حصّن نفسك قبل الغروب.',
+                    schedule: { on: { hour: evening.hours, minute: evening.minutes }, repeats: true }
+                },
+                {
+                    id: notificationIds.wird,
+                    title: 'الورد القرآني',
+                    body: 'لا تهجر القرآن، ولو صفحة واحدة.',
+                    schedule: { on: { hour: wird.hours, minute: wird.minutes }, repeats: true }
+                },
+                {
+                    id: notificationIds.tomorrow,
+                    title: 'تذكير عبادات الغد',
+                    body: 'افتح التطبيق لمراجعة عبادات الغد.',
+                    schedule: { on: { hour: 21, minute: 0 }, repeats: true }
+                }
+            ]
+        });
+    }
+
+    async function schedulePrayerNotifications() {
+        if (!isNativePlatform() || !notificationSettings.enabled || !prayerTimesData) return;
+        const localNotifications = getLocalNotifications();
+        if (!localNotifications) return;
+
+        const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+        const prayerNamesAr = { Fajr: 'الفجر', Dhuhr: 'الظهر', Asr: 'العصر', Maghrib: 'المغرب', Isha: 'العشاء' };
+
+        const notifications = [];
+        const now = new Date();
+
+        prayers.forEach((prayer, index) => {
+            const timeStr = prayerTimesData[prayer];
+            if (!timeStr) return;
+            const prayerTime = parseTime(timeStr);
+            const reminderTime = new Date(prayerTime.getTime() - 15 * 60000);
+            if (reminderTime <= now) return;
+
+            notifications.push({
+                id: notificationIds.prayerBase + index,
+                title: 'اقتربت الصلاة',
+                body: `باقي 15 دقيقة على صلاة ${prayerNamesAr[prayer]}، استعد للوضوء.`,
+                schedule: { at: reminderTime }
+            });
+        });
+
+        if (!notifications.length) return;
+
+        try {
+            await localNotifications.cancel({
+                notifications: prayers.map((_, index) => ({ id: notificationIds.prayerBase + index }))
+            });
+        } catch (err) {
+            console.warn('Prayer notification cancel error:', err);
+        }
+
+        await localNotifications.schedule({ notifications });
+    }
+
+    async function refreshNotificationSchedules() {
+        if (!notificationSettings.enabled) return;
+        await scheduleDailyNotifications();
+        await schedulePrayerNotifications();
+    }
+
     // 2. زر طلب الإذن وتفعيله من المودال
     const enableNotifyBtn = document.getElementById('enable-notify-btn');
     if (enableNotifyBtn) {
         enableNotifyBtn.addEventListener('click', () => {
-            if (!("Notification" in window)) {
-                alert("عذراً، متصفحك لا يدعم الإشعارات.");
-            } else {
-                Notification.requestPermission().then(permission => {
-                    if (permission === "granted") {
-                        enableNotifyBtn.textContent = "تم التفعيل ✓";
-                        enableNotifyBtn.style.backgroundColor = "#22c55e";
-                        enableNotifyBtn.disabled = true;
-                        notificationSettings.enabled = true;
-                        new Notification("محاسبة النفس", { body: "تم تفعيل التنبيهات بنجاح، سنذكرك بالخير دائماً." });
-                    } else {
-                        alert("يجب السماح بالإشعارات لتذكيرك.");
-                    }
-                });
-            }
+            requestNotificationPermission().then((granted) => {
+                if (granted) {
+                    enableNotifyBtn.textContent = "تم التفعيل ✓";
+                    enableNotifyBtn.style.backgroundColor = "#22c55e";
+                    enableNotifyBtn.disabled = true;
+                    notificationSettings.enabled = true;
+                    sendNotification("محاسبة النفس", "تم تفعيل التنبيهات بنجاح، سنذكرك بالخير دائماً.");
+                    refreshNotificationSchedules();
+                } else {
+                    alert("يجب السماح بالإشعارات لتذكيرك.");
+                }
+            });
         });
     }
 
@@ -1936,10 +2288,12 @@ function saveExtras() {
         document.getElementById('setup-evening-time').value = notificationSettings.eveningTime;
         document.getElementById('setup-wird-time').value = notificationSettings.wirdTime;
     }
+    refreshNotificationSchedules();
 
     // 4. الدالة الرئيسية: المراقب الدوري (يعمل كل دقيقة)
     setInterval(() => {
-        if (Notification.permission !== "granted") return;
+        if (!notificationSettings.enabled) return;
+        if (!isNativePlatform() && Notification.permission !== "granted") return;
 
         const now = new Date();
         const currentHours = String(now.getHours()).padStart(2, '0');
@@ -1971,9 +2325,26 @@ function saveExtras() {
 
     // دالة إرسال الإشعار
     function sendNotification(title, body) {
-        const notif = new Notification(title, {
+        if (isNativePlatform()) {
+            const localNotifications = getLocalNotifications();
+            if (!localNotifications) return;
+            localNotifications.schedule({
+                notifications: [
+                    {
+                        id: Math.floor(Date.now() % 1000000),
+                        title,
+                        body,
+                        schedule: { at: new Date(Date.now() + 1000) }
+                    }
+                ]
+            }).catch((err) => console.warn('Notification schedule error:', err));
+            return;
+        }
+
+        if (Notification.permission !== 'granted') return;
+        new Notification(title, {
             body: body,
-            icon: 'path/to/icon.png', // يمكنك وضع مسار أيقونة موقعك
+            icon: 'logo.png',
             dir: 'rtl'
         });
     }
@@ -3167,6 +3538,7 @@ function getFridayStart(date) {
     updateDateDisplay();
     renderDualCalendar(); // <-- ضع هذا السطر
     loadData();
+    initializeWidgetBridge();
 
 
 
@@ -3291,12 +3663,8 @@ function runDailyAnalysis(force = false) {
         // 3. عرض النافذة والإشعار
         showSmartPopup(icon, title, body, analysis);
 
-        if (Notification.permission === "granted" && !force) {
-            new Notification(title, {
-                body: body,
-                icon: 'logo.png',
-                dir: 'rtl' 
-            });
+        if (!force && notificationSettings.enabled) {
+            sendNotification(title, body);
         }
 
         // 4. تسجيل أننا عرضنا التقرير اليوم (عشان ميظهرش تاني لنفس اليوم)

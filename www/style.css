@@ -1520,6 +1520,17 @@ main {
     line-height: 1.6;
 }
 
+.footer-brand p a {
+    color: var(--accent-color);
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(79, 70, 229, 0.45);
+}
+
+.footer-brand p a:hover {
+    color: var(--accent-hover);
+    border-bottom-color: var(--accent-hover);
+}
+
 .social-links {
     display: flex;
     gap: 15px;

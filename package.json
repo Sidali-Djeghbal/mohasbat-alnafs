@@ -1,0 +1,17 @@
+{
+  "name": "mohasbat-alnafs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "sync:android": "npx cap sync android",
+    "open:android": "npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^5.7.0",
+    "@capacitor/core": "^5.7.0",
+    "@capacitor/local-notifications": "^5.0.6"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^5.7.0"
+  }
+}

@@ -4,8 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4f46e5">
   <title>محاسبة النفس</title>
   <link rel="icon" type="image/png" href="logo.png">
+  <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -79,7 +81,7 @@
               <div class="auth-container">
                   <button id="login-btn" class="btn-primary">تسجيل الدخول</button>
                   <div id="profile-icon" class="profile-icon hidden">
-                      <img src="" alt="Profile">
+                      <img src="logo.png" alt="Profile">
                   </div>
               </div>
 
@@ -726,12 +728,13 @@
     <footer class="container glass-footer">
       <div class="footer-brand">
         <h3><img src="logo.png" alt="Logo"></h3>
-        <p>صنعت لوجه الله تعالى بواسطة محمد حمدي، نسألكم الدعاء</p>
-      </div>
-      <div class="social-links">
-        <a href="https://www.facebook.com/mohamdahmedhhamdi/" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-        <a href="https://www.instagram.com/m.7amdy/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://www.linkedin.com/in/mohamdahmedhamdi/" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <p>
+          صنعت لوجه الله تعالى بواسطة
+          <a href="https://www.linkedin.com/in/mohamdahmedhamdi/" target="_blank" rel="noopener noreferrer">محمد حمدي</a>
+          و
+          <a href="https://linkedin.com/in/sidali-djeghbal" target="_blank" rel="noopener noreferrer">سيدعلي</a>،
+          نسألكم الدعاء
+        </p>
       </div>
     </footer>
   </div>
@@ -837,6 +840,15 @@
   <script src="script.js" defer></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
 <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js').catch(() => {
+          // Ignore SW errors to avoid blocking app startup.
+        });
+      });
+    }
+  </script>
 </body>
 
 

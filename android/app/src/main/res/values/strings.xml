@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">محاسبة النفس</string>
+    <string name="title_activity_main">محاسبة النفس</string>
+    <string name="package_name">org.mohasabat.nafs</string>
+    <string name="custom_url_scheme">org.mohasabat.nafs</string>
+    <string name="widget_description">ملخص يومي سريع مع إضافة عبادات مباشرة</string>
+    <string name="widget_today_score">إنجاز اليوم</string>
+    <string name="widget_pending">المتبقي</string>
+    <string name="widget_quick_prayer">تمت صلاة</string>
+    <string name="widget_quick_quran">تم ورد</string>
+    <string name="widget_quick_adhkar">تم ذكر</string>
+</resources>
