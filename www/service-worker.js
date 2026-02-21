@@ -1,14 +1,14 @@
-const CACHE_VERSION = 'mohasbat-v10';
+const CACHE_VERSION = 'mohasbat-v11';
 const STATIC_ASSETS = [
   '.',
   'index.html',
   'assets/css/main.css',
-  'assets/css/main.css?v=20260221c',
+  'assets/css/main.css?v=20260221d',
   'assets/js/app.js',
-  'assets/js/app.js?v=20260221c',
+  'assets/js/app.js?v=20260221d',
   'assets/js/config/firebase-config.js',
   'assets/js/sw-register.js',
-  'assets/js/sw-register.js?v=20260221c',
+  'assets/js/sw-register.js?v=20260221d',
   'assets/images/logo.png',
   'manifest.json',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
