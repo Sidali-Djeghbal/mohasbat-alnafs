@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const dateToggleBtn = document.getElementById('date-toggle-btn');
     const dateDropdown = document.getElementById('date-dropdown');
+    const closeDateDropdownBtn = document.getElementById('close-date-dropdown');
     const currentDateDisplay = document.getElementById('current-date-display');
 
     const ibadatGrid = document.getElementById('ibadat-grid');
@@ -214,59 +215,105 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(() => updateMobileNavIndicator(currentMobilePage));
     }
 
-function gMod(n, m) { return ((n % m) + m) % m; }
-
 function kuwaitiCalendar(date) {
-    var today = date ? new Date(date) : new Date();
-    var day = today.getDate();
-    var month = today.getMonth();
-    var year = today.getFullYear();
-    var m = month + 1;
-    var y = year;
-    if (m < 3) { y -= 1; m += 12; }
-    var a = Math.floor(y / 100);
-    var b = 2 - a + Math.floor(a / 4);
-    if (y < 1583) b = 0;
-    if (y == 1582) {
-        if (m > 10) b = -10;
-        if (m == 10) { b = 0; if (day > 4) b = -10; }
-    }
-    var jd = Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + day + b - 1524;
-    var b = 0;
-    if (jd > 2299160) {
-        var a = Math.floor((jd - 1867216.25) / 36524.25);
-        b = 1 + a - Math.floor(a / 4);
-    }
-    var bb = jd + b + 1524;
-    var cc = Math.floor((bb - 122.1) / 365.25);
-    var dd = Math.floor(365.25 * cc);
-    var ee = Math.floor((bb - dd) / 30.6001);
-    var day = (bb - dd) - Math.floor(30.6001 * ee);
-    var month = ee - 1;
-    if (ee > 13) { cc += 1; month = ee - 13; }
-    var year = cc - 4716;
-    var iyear = 10631.0 / 30.0;
-    var epochastro = 1948084;
-    var epochcivil = 1948085;
-    var shift1 = 8.01 / 60.0;
-    var z = jd - epochastro;
-    var cyc = Math.floor(z / 10631.0);
-    var z = z - 10631 * cyc;
-    var j = Math.floor((z - shift1) / iyear);
-    var iy = 30 * cyc + j;
-    var z = z - Math.floor(j * iyear + shift1);
-    var im = Math.floor((z + 28.5001) / 29.5);
-    if (im == 13) im = 12;
-    var id = z - Math.floor(29.5001 * im - 29);
-    
     const islamicMonths = ["محرم", "صفر", "ربيع الأول", "ربيع الثاني", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"];
-    
-    return {
-        day: id,
-        month: im - 1,
-        year: iy,
-        monthName: islamicMonths[im - 1]
+    const HIJRI_DAY_ADJUSTMENT = -1;
+
+    const normalizeDigits = (value) => String(value || '')
+        .replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+        .replace(/[۰-۹]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+
+    const toDateOnly = (value) => {
+        const d = value ? new Date(value) : new Date();
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate());
     };
+
+    const legacyKuwaitiCalendar = (value) => {
+        const today = toDateOnly(value);
+        let day = today.getDate();
+        let month = today.getMonth();
+        let year = today.getFullYear();
+        let m = month + 1;
+        let y = year;
+
+        if (m < 3) {
+            y -= 1;
+            m += 12;
+        }
+
+        let a = Math.floor(y / 100);
+        let b = 2 - a + Math.floor(a / 4);
+
+        if (y < 1583) b = 0;
+        if (y === 1582) {
+            if (m > 10) b = -10;
+            if (m === 10) {
+                b = 0;
+                if (day > 4) b = -10;
+            }
+        }
+
+        const jd = Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + day + b - 1524;
+        b = 0;
+
+        if (jd > 2299160) {
+            a = Math.floor((jd - 1867216.25) / 36524.25);
+            b = 1 + a - Math.floor(a / 4);
+        }
+
+        let z = jd - 1948084;
+        const cyc = Math.floor(z / 10631.0);
+        z -= 10631 * cyc;
+        const j = Math.floor((z - (8.01 / 60.0)) / (10631.0 / 30.0));
+        const iy = 30 * cyc + j;
+        z -= Math.floor(j * (10631.0 / 30.0) + (8.01 / 60.0));
+        let im = Math.floor((z + 28.5001) / 29.5);
+
+        if (im === 13) im = 12;
+
+        const id = z - Math.floor(29.5001 * im - 29);
+
+        return { day: id, month: im - 1, year: iy };
+    };
+
+    const adjustedDate = toDateOnly(date);
+    adjustedDate.setDate(adjustedDate.getDate() + HIJRI_DAY_ADJUSTMENT);
+
+    try {
+        const formatter = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', {
+            day: 'numeric',
+            month: 'numeric',
+            year: 'numeric'
+        });
+
+        const parts = formatter.formatToParts(adjustedDate);
+        const dayPart = parts.find((part) => part.type === 'day');
+        const monthPart = parts.find((part) => part.type === 'month');
+        const yearPart = parts.find((part) => part.type === 'year');
+
+        const day = Number.parseInt(normalizeDigits(dayPart && dayPart.value), 10);
+        const month = Number.parseInt(normalizeDigits(monthPart && monthPart.value), 10) - 1;
+        const year = Number.parseInt(normalizeDigits(yearPart && yearPart.value), 10);
+
+        if (!Number.isFinite(day) || !Number.isFinite(month) || !Number.isFinite(year)) {
+            throw new Error('Failed to parse Intl Hijri parts');
+        }
+
+        return {
+            day,
+            month,
+            year,
+            monthName: islamicMonths[month] || ''
+        };
+    } catch (_) {
+        const fallback = legacyKuwaitiCalendar(adjustedDate);
+        return {
+            day: fallback.day,
+            month: fallback.month,
+            year: fallback.year,
+            monthName: islamicMonths[fallback.month] || ''
+        };
+    }
 }
 
 
@@ -722,6 +769,51 @@ function initPrayerTimes(lat, long) {
         }
     }
 
+    function findHijriMonthStartDate(anchorDate) {
+        const safeAnchor = anchorDate ? new Date(anchorDate) : new Date();
+        const anchorHijri = kuwaitiCalendar(safeAnchor);
+        const cursor = new Date(safeAnchor);
+
+        for (let i = 0; i < 40; i++) {
+            const currentHijri = kuwaitiCalendar(cursor);
+            if (
+                currentHijri.year === anchorHijri.year &&
+                currentHijri.month === anchorHijri.month &&
+                currentHijri.day === 1
+            ) {
+                return cursor;
+            }
+            cursor.setDate(cursor.getDate() - 1);
+        }
+
+        return new Date(safeAnchor.getFullYear(), safeAnchor.getMonth(), safeAnchor.getDate());
+    }
+
+    function moveHijriMonth(step) {
+        if (step !== 1 && step !== -1) return;
+
+        const currentHijri = kuwaitiCalendar(currentViewDateH);
+        const currentMonthStart = findHijriMonthStartDate(currentViewDateH);
+        const targetDate = new Date(currentMonthStart);
+
+        targetDate.setDate(targetDate.getDate() + (step > 0 ? 32 : -2));
+        let targetMonthStart = findHijriMonthStartDate(targetDate);
+        let targetHijri = kuwaitiCalendar(targetMonthStart);
+
+        if (targetHijri.month === currentHijri.month && targetHijri.year === currentHijri.year) {
+            targetDate.setDate(targetDate.getDate() + (step > 0 ? 35 : -35));
+            targetMonthStart = findHijriMonthStartDate(targetDate);
+            targetHijri = kuwaitiCalendar(targetMonthStart);
+        }
+
+        if (targetHijri.month === currentHijri.month && targetHijri.year === currentHijri.year) {
+            return;
+        }
+
+        currentViewDateH = targetMonthStart;
+        renderHijriGrid();
+    }
+
     function renderHijriGrid() {
         const grid = document.getElementById('days-grid-h');
         const monthLabel = document.getElementById('current-month-display-h');
@@ -733,18 +825,7 @@ function initPrayerTimes(lat, long) {
         monthLabel.textContent = `${hObj.monthName} ${hObj.year}`;
         grid.innerHTML = '';
 
-        let tempDate = new Date(currentViewDateH);
-        tempDate.setDate(tempDate.getDate() - 35); 
-        let firstDayDate = null;
-        for(let i=0; i<70; i++) {
-            tempDate.setDate(tempDate.getDate() + 1);
-            let check = kuwaitiCalendar(tempDate);
-            if (check.month === hMonth && check.year === hYear && check.day === 1) {
-                firstDayDate = new Date(tempDate);
-                break;
-            }
-        }
-        if (!firstDayDate) firstDayDate = new Date(currentViewDateH); 
+        const firstDayDate = findHijriMonthStartDate(currentViewDateH);
 
         const dayOfWeek = firstDayDate.getDay(); 
         const startDayIndex = (dayOfWeek + 1) % 7;
@@ -755,17 +836,17 @@ function initPrayerTimes(lat, long) {
             grid.appendChild(empty);
         }
 
+        const selectedH = kuwaitiCalendar(currentDate);
         let iteratorDate = new Date(firstDayDate);
-        for (let i = 1; i <= 30; i++) {
+        for (let i = 0; i < 31; i++) {
             const currH = kuwaitiCalendar(iteratorDate);
-            if (currH.month !== hMonth) break; 
+            if (currH.month !== hMonth || currH.year !== hYear) break; 
             
             const dayEl = document.createElement('div');
             dayEl.classList.add('date-day');
-            dayEl.textContent = i;
+            dayEl.textContent = currH.day;
             
-            const selectedH = kuwaitiCalendar(currentDate);
-            if (i === selectedH.day && hMonth === selectedH.month && hYear === selectedH.year) {
+            if (currH.day === selectedH.day && hMonth === selectedH.month && hYear === selectedH.year) {
                 dayEl.classList.add('active');
             }
             
@@ -797,11 +878,31 @@ function initPrayerTimes(lat, long) {
         }
     }
 
+    function positionDateDropdownForMobile() {
+        if (!dateDropdown || !dateToggleBtn) return;
+
+        if (!isMobileViewport() || dateDropdown.classList.contains('hidden')) {
+            dateDropdown.style.removeProperty('--calendar-dropdown-top');
+            return;
+        }
+
+        const triggerRect = dateToggleBtn.getBoundingClientRect();
+        const viewportPadding = 12;
+        const estimatedHeight = dateDropdown.offsetHeight || 420;
+        let top = triggerRect.bottom + 8;
+
+        if (top + estimatedHeight > window.innerHeight - viewportPadding) {
+            top = Math.max(viewportPadding, window.innerHeight - viewportPadding - estimatedHeight);
+        }
+
+        dateDropdown.style.setProperty('--calendar-dropdown-top', `${Math.round(top)}px`);
+    }
+
     const pmg = document.getElementById('prev-month-g'); if(pmg) pmg.addEventListener('click', (e) => { e.stopPropagation(); currentViewDateG.setMonth(currentViewDateG.getMonth() - 1); renderGregorianGrid(); });
     const nmg = document.getElementById('next-month-g'); if(nmg) nmg.addEventListener('click', (e) => { e.stopPropagation(); currentViewDateG.setMonth(currentViewDateG.getMonth() + 1); renderGregorianGrid(); });
     
-    const pmh = document.getElementById('prev-month-h'); if(pmh) pmh.addEventListener('click', (e) => { e.stopPropagation(); currentViewDateH.setDate(currentViewDateH.getDate() - 29); renderHijriGrid(); });
-    const nmh = document.getElementById('next-month-h'); if(nmh) nmh.addEventListener('click', (e) => { e.stopPropagation(); currentViewDateH.setDate(currentViewDateH.getDate() + 29); renderHijriGrid(); });
+    const pmh = document.getElementById('prev-month-h'); if(pmh) pmh.addEventListener('click', (e) => { e.stopPropagation(); moveHijriMonth(-1); });
+    const nmh = document.getElementById('next-month-h'); if(nmh) nmh.addEventListener('click', (e) => { e.stopPropagation(); moveHijriMonth(1); });
 
     if (dateToggleBtn) {
         dateToggleBtn.addEventListener('click', (e) => {
@@ -812,10 +913,30 @@ function initPrayerTimes(lat, long) {
                     currentViewDateG = new Date(currentDate);
                     currentViewDateH = new Date(currentDate);
                     renderDualCalendar();
+                    requestAnimationFrame(positionDateDropdownForMobile);
                 }
             }
         });
     }
+
+    if (closeDateDropdownBtn && dateDropdown) {
+        closeDateDropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dateDropdown.classList.add('hidden');
+        });
+    }
+
+    window.addEventListener('resize', () => {
+        if (dateDropdown && !dateDropdown.classList.contains('hidden')) {
+            requestAnimationFrame(positionDateDropdownForMobile);
+        }
+    }, { passive: true });
+
+    window.addEventListener('scroll', () => {
+        if (dateDropdown && !dateDropdown.classList.contains('hidden') && isMobileViewport()) {
+            requestAnimationFrame(positionDateDropdownForMobile);
+        }
+    }, { passive: true });
     const ADHKAR_TYPES = ['morning', 'wakeup', 'evening', 'post_fajr', 'post_dhuhr', 'post_asr', 'post_maghrib', 'post_isha'];
 
     const d = (text, count = 1, fadl = null) => ({ text, count, fadl });
