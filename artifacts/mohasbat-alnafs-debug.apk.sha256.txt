@@ -1,0 +1,1 @@
+c371fbc52ed97be26e3a23258341270812b9e970aaee66f391567c9674f9f14a  artifacts/mohasbat-alnafs-debug.apk
