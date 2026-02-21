@@ -1,6 +1,5 @@
 <div align="center">
-  <img src="www/assets/images/logo.png" alt="شعار محاسبة النفس" width="120" />
-  <h1>محاسبة النفس</h1>
+  <img src="www/assets/images/logo.png" alt="شعار محاسبة النفس" width="160" />
   <p>منصة عملية لمتابعة العبادات اليومية، بقياس واضح، وتحليل مستمر، وتجربة متكاملة على الويب وAndroid.</p>
   <p><strong>الموقع المباشر:</strong> <a href="https://mouhasabat-nafs.netlify.app">mouhasabat-nafs.netlify.app</a></p>
 
@@ -19,6 +18,15 @@
 
 ## نظرة عامة
 **محاسبة النفس** تطبيق عربي لتتبّع الإنجاز الإيماني اليومي عبر نظام نقاط ومؤشرات أداء، مع مزامنة سحابية عبر Firebase، وتجربة استخدام مناسبة للجوال والويب، بالإضافة إلى نسخة Android مبنية بـ Capacitor.
+
+## تحديثات حديثة
+- تحسين عرض التقويم في جميع الشاشات (Desktop + Mobile) مع ألوان متوافقة في الـ Light/Dark mode.
+- إصلاح مشكلة تداخل التقويم مع بطاقات الصلوات في الموبايل.
+- إضافة زر إغلاق مباشر للتقويم.
+- إضافة 3 Widgets جديدة على Android بجانب الودجت الأساسي:
+  - الصلاة القادمة + عد تنازلي
+  - حلقة إنجاز اليوم
+  - أذكار الصباح/المساء (إجراء سريع)
 
 ## روابط سريعة
 - الموقع الرسمي: [https://mouhasabat-nafs.netlify.app](https://mouhasabat-nafs.netlify.app)
@@ -40,7 +48,23 @@
 - دعم الثيم الداكن وتجربة RTL كاملة.
 - تنقل سفلي للموبايل بأسلوب تطبيقات الهاتف مع انتقالات سلسة.
 - دعم PWA (Service Worker + Manifest) للعمل بشكل موثوق حتى مع ضعف الاتصال.
-- نسخة Android كاملة مع **Widget** للشاشة الرئيسية وإجراءات سريعة (صلاة/ورد/أذكار).
+- نسخة Android كاملة مع Widgets للشاشة الرئيسية وإجراءات سريعة.
+
+## Widgets Android المتاحة حاليًا
+1. **الودجت الأساسي (ملخص يومي):**
+- يعرض إنجاز اليوم + المتبقي + أزرار سريعة (صلاة/ورد/أذكار).
+
+2. **الصلاة القادمة + العد التنازلي:**
+- يعرض اسم الصلاة القادمة + الوقت المتبقي + وقت الصلاة.
+- أزرار سريعة: `تمت الصلاة` و`أذكار الآن`.
+
+3. **حلقة إنجاز اليوم:**
+- يعرض نسبة الإنجاز داخل Progress Ring.
+- يعرض عدد المهام المتبقية.
+
+4. **أذكار اليوم (الصباح/المساء):**
+- يعرض المرحلة الحالية (صباح/مساء) وحالة الإتمام.
+- زر سريع لإتمام الذكر.
 
 ## تقنيات المشروع
 - **Frontend:** HTML, CSS, JavaScript (Vanilla).
@@ -60,6 +84,22 @@
 ```text
 .
 ├── android/                         # مشروع Android (Capacitor)
+│   └── app/src/main/
+│       ├── java/org/mohasabat/nafs/
+│       │   ├── MohasbatWidgetProvider.java
+│       │   ├── NextPrayerWidgetProvider.java
+│       │   ├── DailyProgressWidgetProvider.java
+│       │   └── AdhkarQuickWidgetProvider.java
+│       ├── res/layout/
+│       │   ├── widget_mohasbat.xml
+│       │   ├── widget_next_prayer.xml
+│       │   ├── widget_daily_progress.xml
+│       │   └── widget_adhkar_quick.xml
+│       └── res/xml/
+│           ├── mohasbat_widget_info.xml
+│           ├── next_prayer_widget_info.xml
+│           ├── daily_progress_widget_info.xml
+│           └── adhkar_quick_widget_info.xml
 ├── artifacts/
 │   └── mohasbat-alnafs-debug.apk    # نسخة APK Debug الجاهزة
 ├── www/
@@ -79,6 +119,10 @@
 ```
 
 ## تشغيل المشروع محليًا
+المتطلبات:
+- Node.js 18+ (يفضل LTS).
+- npm.
+
 ```bash
 npm install
 npx serve www
@@ -114,6 +158,10 @@ window.APP_CONFIG = {
 ```
 
 ## بناء تطبيق Android
+المتطلبات:
+- Android Studio + Android SDK.
+- Java 17 (JBR الخاص بـ Android Studio يعمل مباشرة).
+
 ```bash
 npm run sync:android
 cd android
@@ -125,6 +173,31 @@ JAVA_HOME=/opt/android-studio/jbr ANDROID_HOME=$HOME/Android/Sdk ./gradlew clean
 
 نسخة مجمعة داخل المشروع:
 - `artifacts/mohasbat-alnafs-debug.apk`
+
+## بناء APK نظيف + SHA-256
+إذا أردت إخراج نسخة جديدة مضمونة بدون بقايا Builds قديمة:
+
+```bash
+# من جذر المشروع
+rm -f artifacts/*.apk artifacts/*.sha256 artifacts/*.sha256.txt
+rm -rf android/app/build/outputs/apk android/app/build/outputs/logs
+
+cd android
+JAVA_HOME=/opt/android-studio/jbr ANDROID_HOME=$HOME/Android/Sdk ./gradlew clean assembleDebug
+cd ..
+
+cp -f android/app/build/outputs/apk/debug/app-debug.apk artifacts/mohasbat-alnafs-debug.apk
+sha256sum artifacts/mohasbat-alnafs-debug.apk > artifacts/mohasbat-alnafs-debug.apk.sha256.txt
+```
+
+الملفات النهائية:
+- `artifacts/mohasbat-alnafs-debug.apk`
+- `artifacts/mohasbat-alnafs-debug.apk.sha256.txt`
+
+للتحقق:
+```bash
+sha256sum -c artifacts/mohasbat-alnafs-debug.apk.sha256.txt
+```
 
 ## النشر على Netlify
 - `publish` مضبوط مسبقًا على مجلد `www` عبر `netlify.toml`.
@@ -141,3 +214,4 @@ JAVA_HOME=/opt/android-studio/jbr ANDROID_HOME=$HOME/Android/Sdk ./gradlew clean
 - التطبيق موجه لواجهة عربية RTL بالكامل.
 - يدعم العمل كويب وتطبيق Android بنفس قاعدة الكود.
 - أي تعديل على `www/assets/js/config/firebase-config.js` يتطلب إعادة بناء APK لأخذ الإعدادات الجديدة داخل نسخة Android.
+- لأن التطبيق يعمل كـ PWA مع Service Worker، قد تحتاج **Hard Refresh** بعد تحديثات الواجهة (خصوصًا CSS/JS) على بعض الأجهزة.

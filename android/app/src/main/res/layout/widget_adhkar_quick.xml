@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_adhkar_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0F172A"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_adhkar_title"
+        android:textColor="#CBD5E1"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/widget_adhkar_phase_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="أذكار الصباح"
+        android:textColor="#F8FAFC"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/widget_adhkar_status_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="غير مكتملة"
+        android:textColor="#F59E0B"
+        android:textSize="13sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/widget_adhkar_step_1_btn"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginBottom="4dp"
+            android:background="#334155"
+            android:text="@string/widget_adhkar_step_1"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/widget_adhkar_step_2_btn"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginBottom="4dp"
+            android:background="#334155"
+            android:text="@string/widget_adhkar_step_2"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/widget_adhkar_step_3_btn"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginBottom="6dp"
+            android:background="#334155"
+            android:text="@string/widget_adhkar_step_3"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/widget_adhkar_complete_btn"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="#166534"
+                android:text="@string/widget_adhkar_complete_all"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp" />
+
+            <Button
+                android:id="@+id/widget_adhkar_open_btn"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_weight="1"
+                android:background="#334155"
+                android:text="@string/widget_adhkar_open"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

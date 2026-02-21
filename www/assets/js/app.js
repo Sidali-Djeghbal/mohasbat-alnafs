@@ -1225,6 +1225,103 @@ function getWidgetPendingCount() {
     return pending;
 }
 
+function parsePrayerTimeForWidget(timeStr, baseDate = new Date()) {
+    if (!timeStr) return null;
+
+    const clean = String(timeStr).trim().split(' ')[0];
+    const [hoursRaw, minutesRaw] = clean.split(':');
+    const hours = Number.parseInt(hoursRaw, 10);
+    const minutes = Number.parseInt(minutesRaw, 10);
+
+    if (!Number.isFinite(hours) || !Number.isFinite(minutes)) return null;
+
+    return new Date(
+        baseDate.getFullYear(),
+        baseDate.getMonth(),
+        baseDate.getDate(),
+        hours,
+        minutes,
+        0,
+        0
+    );
+}
+
+function formatCountdownForWidget(diffMs) {
+    const safe = Math.max(0, Math.floor(diffMs / 1000));
+    const totalMinutes = Math.floor(safe / 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+}
+
+function getNextPrayerWidgetData() {
+    const fallback = {
+        name: 'الصلاة القادمة',
+        countdown: '--:--',
+        time: '--:--'
+    };
+
+    if (!prayerTimesData) return fallback;
+
+    const now = new Date();
+    const prayers = [
+        { key: 'Fajr', name: 'الفجر' },
+        { key: 'Dhuhr', name: 'الظهر' },
+        { key: 'Asr', name: 'العصر' },
+        { key: 'Maghrib', name: 'المغرب' },
+        { key: 'Isha', name: 'العشاء' }
+    ];
+
+    const candidates = prayers.map((prayer) => {
+        const raw = prayerTimesData[prayer.key];
+        const at = parsePrayerTimeForWidget(raw, now);
+        if (!at) return null;
+
+        if (at <= now) {
+            at.setDate(at.getDate() + 1);
+        }
+
+        return { name: prayer.name, at };
+    }).filter(Boolean);
+
+    if (!candidates.length) return fallback;
+
+    candidates.sort((a, b) => a.at - b.at);
+    const next = candidates[0];
+
+    return {
+        name: next.name,
+        countdown: formatCountdownForWidget(next.at - now),
+        time: next.at.toLocaleTimeString('ar-EG', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        })
+    };
+}
+
+function getAdhkarWidgetData() {
+    let phaseKey = 'morning';
+
+    if (prayerTimesData && prayerTimesData.Asr) {
+        const now = new Date();
+        const asrDate = parsePrayerTimeForWidget(prayerTimesData.Asr, now);
+        if (asrDate && now >= asrDate) {
+            phaseKey = 'evening';
+        }
+    } else if (new Date().getHours() >= 15) {
+        phaseKey = 'evening';
+    }
+
+    const progress = document.getElementById(`progress-${phaseKey}`);
+    const completed = !!progress && progress.style.width === '100%';
+
+    return {
+        phase: phaseKey === 'morning' ? 'أذكار الصباح' : 'أذكار المساء',
+        completed
+    };
+}
+
 function syncWidgetStatsToNative() {
     if (!isNativePlatform()) return;
 
@@ -1234,9 +1331,16 @@ function syncWidgetStatsToNative() {
     try {
         const scoreData = calculateScoreAndSummary();
         const pending = getWidgetPendingCount();
+        const nextPrayer = getNextPrayerWidgetData();
+        const adhkar = getAdhkarWidgetData();
         widgetBridge.updateHomeWidget({
             score: scoreData.percentage,
-            pending: pending
+            pending: pending,
+            nextPrayerName: nextPrayer.name,
+            nextPrayerCountdown: nextPrayer.countdown,
+            nextPrayerTime: nextPrayer.time,
+            adhkarPhase: adhkar.phase,
+            adhkarCompleted: adhkar.completed
         }).catch(() => {});
     } catch (e) {
     }
@@ -1297,6 +1401,28 @@ function markAdhkarAsDoneFromWidget() {
     return false;
 }
 
+function resetAdhkarFromWidget() {
+    let changed = false;
+
+    for (const type of ADHKAR_TYPES) {
+        const progress = document.getElementById(`progress-${type}`);
+        if (!progress) continue;
+
+        if (progress.style.width !== '0%') {
+            progress.style.width = '0%';
+            changed = true;
+        }
+
+        const btn = document.querySelector(`button[onclick="openAdhkar('${type}')"]`);
+        if (btn && btn.classList.contains('completed')) {
+            btn.classList.remove('completed');
+            changed = true;
+        }
+    }
+
+    return changed;
+}
+
 function applyWidgetQuickAction(action) {
     let changed = false;
 
@@ -1308,6 +1434,9 @@ function applyWidgetQuickAction(action) {
         if (changed) saveIbadatData();
     } else if (action === 'adhkar') {
         changed = markAdhkarAsDoneFromWidget();
+        if (changed) saveData();
+    } else if (action === 'adhkar_reset') {
+        changed = resetAdhkarFromWidget();
         if (changed) saveData();
     }
 
@@ -1338,11 +1467,51 @@ function parseWidgetActionFromEvent(event) {
     return '';
 }
 
-function clearPendingWidgetAction() {
+function clearSinglePendingWidgetAction() {
     const widgetBridge = getWidgetBridge();
     if (!widgetBridge || typeof widgetBridge.consumePendingQuickAction !== 'function') return;
 
     widgetBridge.consumePendingQuickAction().catch(() => {});
+}
+
+function clearAllPendingWidgetActions() {
+    const widgetBridge = getWidgetBridge();
+    if (!widgetBridge) return;
+
+    if (typeof widgetBridge.consumePendingQuickActions === 'function') {
+        widgetBridge.consumePendingQuickActions().catch(() => {});
+        return;
+    }
+
+    if (typeof widgetBridge.consumePendingQuickAction === 'function') {
+        widgetBridge.consumePendingQuickAction().catch(() => {});
+    }
+}
+
+function normalizePendingWidgetActions(raw) {
+    if (!raw) return [];
+
+    if (Array.isArray(raw)) {
+        return raw
+            .map((action) => String(action || '').trim())
+            .filter((action) => action.length > 0);
+    }
+
+    if (typeof raw === 'string') {
+        const action = raw.trim();
+        return action ? [action] : [];
+    }
+
+    if (typeof raw === 'object' && typeof raw.length === 'number') {
+        const list = [];
+        for (let i = 0; i < raw.length; i += 1) {
+            const action = String(raw[i] || '').trim();
+            if (action) list.push(action);
+        }
+        return list;
+    }
+
+    return [];
 }
 
 async function initializeWidgetBridge() {
@@ -1356,20 +1525,30 @@ async function initializeWidgetBridge() {
         if (!action) return;
 
         applyWidgetQuickAction(action);
-        clearPendingWidgetAction();
+        clearSinglePendingWidgetAction();
     });
 
     syncWidgetStatsToNative();
 
-    if (typeof widgetBridge.getPendingQuickAction !== 'function') return;
-
     try {
-        const result = await widgetBridge.getPendingQuickAction();
-        const action = result && result.action ? String(result.action) : '';
+        if (typeof widgetBridge.getPendingQuickActions === 'function') {
+            const result = await widgetBridge.getPendingQuickActions();
+            const actions = normalizePendingWidgetActions(result && result.actions ? result.actions : []);
 
-        if (action) {
-            applyWidgetQuickAction(action);
-            clearPendingWidgetAction();
+            if (actions.length) {
+                actions.forEach((action) => applyWidgetQuickAction(action));
+                clearAllPendingWidgetActions();
+            }
+            return;
+        }
+
+        if (typeof widgetBridge.getPendingQuickAction !== 'function') return;
+        const result = await widgetBridge.getPendingQuickAction();
+        const actions = normalizePendingWidgetActions(result && result.action ? result.action : '');
+
+        if (actions.length) {
+            actions.forEach((action) => applyWidgetQuickAction(action));
+            clearAllPendingWidgetActions();
         }
     } catch (_) {
     }

@@ -10,4 +10,26 @@
     <string name="widget_quick_prayer">تمت صلاة</string>
     <string name="widget_quick_quran">تم ورد</string>
     <string name="widget_quick_adhkar">تم ذكر</string>
+    <string name="widget_next_prayer_description">الصلاة القادمة مع عد تنازلي وإجراءات سريعة</string>
+    <string name="widget_next_prayer_title">الصلاة القادمة</string>
+    <string name="widget_next_prayer_done">تمت الصلاة</string>
+    <string name="widget_next_prayer_adhkar">أذكار الآن</string>
+    <string name="widget_progress_description">حلقة إنجاز اليوم مع نسبة التقدم</string>
+    <string name="widget_progress_title">إنجاز اليوم</string>
+    <string name="widget_progress_pending">المتبقي: %1$d</string>
+    <string name="widget_progress_open">فتح التطبيق</string>
+    <string name="widget_adhkar_description">ويدجت سريع لإتمام أذكار الصباح والمساء</string>
+    <string name="widget_adhkar_title">أذكار اليوم</string>
+    <string name="widget_adhkar_complete">إتمام الذكر</string>
+    <string name="widget_adhkar_complete_all">إتمام الكل</string>
+    <string name="widget_adhkar_done_btn">تمت</string>
+    <string name="widget_adhkar_reset">إعادة الضبط</string>
+    <string name="widget_adhkar_open">فتح التطبيق</string>
+    <string name="widget_adhkar_completed">مكتملة</string>
+    <string name="widget_adhkar_not_completed">غير مكتملة</string>
+    <string name="widget_adhkar_steps_status">الإنجاز: %1$d/%2$d</string>
+    <string name="widget_adhkar_step_1">سبحان الله</string>
+    <string name="widget_adhkar_step_2">الحمد لله</string>
+    <string name="widget_adhkar_step_3">الله أكبر</string>
+    <string name="widget_adhkar_step_done_prefix">✓ %1$s</string>
 </resources>

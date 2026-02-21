@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_daily_progress_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#111827"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_progress_title"
+        android:textColor="#CBD5E1"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <FrameLayout
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:id="@+id/widget_daily_progress_ring"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/widget_progress_title"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/widget_daily_progress_value"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="0%"
+            android:textColor="#F8FAFC"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/widget_daily_progress_pending"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="المتبقي: 0"
+        android:textColor="#94A3B8"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/widget_daily_progress_prayer_btn"
+            android:layout_width="0dp"
+            android:layout_height="34dp"
+            android:layout_marginEnd="6dp"
+            android:layout_weight="1"
+            android:background="#334155"
+            android:text="@string/widget_quick_prayer"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/widget_daily_progress_quran_btn"
+            android:layout_width="0dp"
+            android:layout_height="34dp"
+            android:layout_weight="1"
+            android:background="#334155"
+            android:text="@string/widget_quick_quran"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/widget_daily_progress_open_btn"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_marginTop="6dp"
+        android:background="#1D4ED8"
+        android:text="@string/widget_progress_open"
+        android:textColor="#FFFFFF"
+        android:textSize="10sp" />
+
+</LinearLayout>
