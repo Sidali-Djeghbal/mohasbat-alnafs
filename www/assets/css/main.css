@@ -657,15 +657,15 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #f8fafc;
+    color: var(--text-primary);
     margin-bottom: 0.5rem;
     font-weight: 700;
 }
 
 .month-nav-btn {
     background: none;
-    border: 1px solid #334155;
-    color: #94a3b8;
+    border: 1px solid var(--glass-border);
+    color: var(--text-secondary);
     cursor: pointer;
     padding: 0.25rem 0.5rem;
     border-radius: 0.5rem;
@@ -680,7 +680,7 @@ main {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     text-align: center;
-    color: #94a3b8;
+    color: var(--text-secondary);
     font-size: 0.85rem;
     margin-bottom: 0.5rem;
 }
@@ -700,7 +700,7 @@ main {
     border-radius: 0.5rem;
     cursor: pointer;
     font-size: 0.9rem;
-    color: #f8fafc;
+    color: var(--text-primary);
 }
 
 .date-day.empty {
@@ -709,7 +709,7 @@ main {
 }
 
 .date-day:hover {
-    background-color: var(--bg-primary);
+    background-color: rgba(var(--accent-color-rgb), 0.15);
     color: var(--accent-color);
 }
 
@@ -1730,6 +1730,16 @@ main {
 
 .hijri-section .month-selector {
     color: #eab308; 
+}
+
+html[data-theme="light"] .close-date-dropdown-btn {
+    border-color: rgba(71, 85, 105, 0.35);
+    background: rgba(241, 245, 249, 0.92);
+    color: #334155;
+}
+
+html[data-theme="light"] .close-date-dropdown-btn:hover {
+    background: rgba(203, 213, 225, 0.8);
 }
 
 .hijri-section .date-day.today {
