@@ -1,865 +1,1283 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#4f46e5" />
+    <title>محاسبة النفس</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#4f46e5">
-  <title>محاسبة النفس</title>
-  <link rel="icon" type="image/png" href="assets/images/logo.png">
-  <link rel="manifest" href="manifest.json">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/main.css?v=20260221c" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  </head>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/main.css?v=20260221c">
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-</head>
+  <body>
+    <div class="liquid-background">
+      <div class="blob-global blob-g-1"></div>
+      <div class="blob-global blob-g-2"></div>
+      <div class="blob-global blob-g-3"></div>
+    </div>
 
-<body>
-  <div class="liquid-background">
-    <div class="blob-global blob-g-1"></div>
-    <div class="blob-global blob-g-2"></div>
-    <div class="blob-global blob-g-3"></div>
-  </div>
-  
-  <header id="main-header">
-    <div class="container header-content">
-      <div class="logo">
-        <a href="#">
-          <img src="assets/images/logo.png" alt="">
-        </a>
-      </div>
+    <header id="main-header">
+      <div class="container header-content">
+        <div class="logo">
+          <a href="#">
+            <img src="assets/images/logo.png" alt="" />
+          </a>
+        </div>
 
-      <div id="header-progress-container" class="header-progress-container">
-            <span id="header-progress-text">0%</span>
-            <div class="header-progress-bar-bg">
-                <div id="header-progress-fill" class="header-progress-fill"></div>
-            </div>
-      </div>
+        <div id="header-progress-container" class="header-progress-container">
+          <span id="header-progress-text">0%</span>
+          <div class="header-progress-bar-bg">
+            <div id="header-progress-fill" class="header-progress-fill"></div>
+          </div>
+        </div>
 
-      <div class="header-actions">
+        <div class="header-actions">
           <button id="mobile-menu-btn" class="mobile-menu-toggle">
-              <i class="fa-solid fa-ellipsis-vertical"></i>
+            <i class="fa-solid fa-ellipsis-vertical"></i>
           </button>
 
           <div id="action-icons" class="action-icons-wrapper">
-              
-              <button id="theme-toggle" aria-label="Toggle Dark Mode">
-                  <i class="fa-solid fa-moon"></i>
-              </button>
-
-              <button id="analytics-btn" class="settings-btn" aria-label="الإحصائيات" onclick="scrollToAnalytics()">
-                  <i class="fa-solid fa-chart-pie"></i>
-              </button>
-
-              <div class="notification-wrapper" style="position: relative;">
-                  <button id="notification-btn" class="settings-btn" aria-label="Notifications">
-                      <i class="fa-solid fa-bell"></i>
-                      <span id="notif-badge" class="notification-badge hidden"></span>
-                  </button>
-                  <div id="notification-popup" class="notification-popup hidden">
-                      <div class="popup-header">
-                          <h4>تذكير بعبادة الغد</h4>
-                          <button id="close-notif" class="close-small">&times;</button>
-                      </div>
-                      <div class="popup-body" id="notif-content"></div>
-                  </div>
-              </div>
-
-              <button id="settings-btn" class="settings-btn hidden" aria-label="Settings">
-                  <i class="fa-solid fa-gear"></i>
-              </button>
-
-              <div class="auth-container">
-                  <button id="login-btn" class="btn-primary">تسجيل الدخول</button>
-                  <div id="profile-icon" class="profile-icon hidden">
-                      <img src="assets/images/logo.png" alt="Profile">
-                  </div>
-              </div>
-
-          </div>
-      </div>
-    </div>
-
-
-  </header>
-
-  <main>
-
-    <section id="bonus-section" class="container hidden mobile-page-section" data-mobile-page="home" style="margin-top: 1rem; margin-bottom: 1rem;">
-        <div class="bonus-card" data-aos="fade-down">
-            <div class="bonus-icon">
-                <i class="fa-solid fa-star"></i>
-            </div>
-            <div class="bonus-content">
-                <h3 id="bonus-title">عبادة خاصة اليوم</h3>
-                <p id="bonus-desc">وصف العبادة</p>
-            </div>
-            <button id="bonus-action-btn" class="task-btn bonus-btn" data-points="5">
-                تمت (5+ نقاط)
+            <button id="theme-toggle" aria-label="Toggle Dark Mode">
+              <i class="fa-solid fa-moon"></i>
             </button>
-        </div>
-    </section>
 
-    <section id="section-daily" class="accountability-section mobile-page-section" data-mobile-page="home">
-      <div class="container">
-        <h2 id="daily-verse" class="page-title"></h2>
-        <div class="date-toggle-container">
-  <button id="date-toggle-btn" class="date-toggle-btn">
-    <span id="current-date-display"></span>
-    <i class="fa-solid fa-chevron-down"></i>
-  </button>
-  
-  <div id="date-dropdown" class="date-dropdown hidden dual-calendar">
-    <button id="close-date-dropdown" class="close-date-dropdown-btn" aria-label="إغلاق التقويم">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-    
-    <div class="calendar-section gregorian-section">
-      <div class="month-selector">
-        <button id="prev-month-g" class="month-nav-btn"><i class="fa-solid fa-chevron-right"></i></button>
-        <span id="current-month-display-g"></span>
-        <button id="next-month-g" class="month-nav-btn"><i class="fa-solid fa-chevron-left"></i></button>
-      </div>
-      <div class="days-header">
-        <span>سبت</span><span>أحد</span><span>اثنين</span><span>ثلاثاء</span><span>أربعاء</span><span>خميس</span><span>جمعة</span>
-      </div>
-      <div id="days-grid-g" class="days-grid"></div>
-    </div>
+            <div class="notification-wrapper" style="position: relative">
+              <button
+                id="notification-btn"
+                class="settings-btn"
+                aria-label="Notifications"
+              >
+                <i class="fa-solid fa-bell"></i>
+                <span id="notif-badge" class="notification-badge hidden"></span>
+              </button>
+              <div id="notification-popup" class="notification-popup hidden">
+                <div class="popup-header">
+                  <h4>تذكير بعبادة الغد</h4>
+                  <button id="close-notif" class="close-small">&times;</button>
+                </div>
+                <div class="popup-body" id="notif-content"></div>
+              </div>
+            </div>
 
-    <div class="calendar-divider"></div>
+            <button
+              id="settings-btn"
+              class="settings-btn hidden"
+              aria-label="Settings"
+            >
+              <i class="fa-solid fa-gear"></i>
+            </button>
 
-    <div class="calendar-section hijri-section">
-      <div class="month-selector">
-        <button id="prev-month-h" class="month-nav-btn"><i class="fa-solid fa-chevron-right"></i></button>
-        <span id="current-month-display-h"></span>
-        <button id="next-month-h" class="month-nav-btn"><i class="fa-solid fa-chevron-left"></i></button>
-      </div>
-      <div class="days-header">
-        <span>سبت</span><span>أحد</span><span>اثنين</span><span>ثلاثاء</span><span>أربعاء</span><span>خميس</span><span>جمعة</span>
-      </div>
-      <div id="days-grid-h" class="days-grid"></div>
-    </div>
-
-  </div>
-</div>
-
-        <div class="global-progress-container">
-          <div class="progress-label">
-            <span>إنجاز اليوم</span>
-            <span id="total-score">0%</span>
-          </div>
-          <div class="progress-track">
-            <div id="global-progress-bar" class="progress-fill" style="width: 0%"></div>
+            <div class="auth-container">
+              <button id="login-btn" class="btn-primary">تسجيل الدخول</button>
+              <div id="profile-icon" class="profile-icon hidden">
+                <img src="assets/images/logo.png" alt="Profile" />
+              </div>
+            </div>
           </div>
         </div>
-        <div id="setup-modal" class="modal-overlay hidden" style="z-index: 3000;">
-          <div class="liquid-modal">
+      </div>
+    </header>
+
+    <main>
+      <section
+        id="bonus-section"
+        class="container hidden mobile-page-section"
+        data-mobile-page="home"
+        style="margin-top: 1rem; margin-bottom: 1rem"
+      >
+        <div class="bonus-card" data-aos="fade-down">
+          <div class="bonus-icon">
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <div class="bonus-content">
+            <h3 id="bonus-title">عبادة خاصة اليوم</h3>
+            <p id="bonus-desc">وصف العبادة</p>
+          </div>
+          <button
+            id="bonus-action-btn"
+            class="task-btn bonus-btn"
+            data-points="5"
+          >
+            تمت (5+ نقاط)
+          </button>
+        </div>
+      </section>
+
+      <section
+        id="section-daily"
+        class="accountability-section mobile-page-section"
+        data-mobile-page="home"
+      >
+        <div class="container">
+          <h2 id="daily-verse" class="page-title"></h2>
+          <div class="date-toggle-container">
+            <button id="date-toggle-btn" class="date-toggle-btn">
+              <span id="current-date-display"></span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+
+            <div id="date-dropdown" class="date-dropdown hidden dual-calendar">
+              <button
+                id="close-date-dropdown"
+                class="close-date-dropdown-btn"
+                aria-label="إغلاق التقويم"
+              >
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+
+              <div class="calendar-section gregorian-section">
+                <div class="month-selector">
+                  <button id="prev-month-g" class="month-nav-btn">
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                  <span id="current-month-display-g"></span>
+                  <button id="next-month-g" class="month-nav-btn">
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+                </div>
+                <div class="days-header">
+                  <span>سبت</span><span>أحد</span><span>اثنين</span
+                  ><span>ثلاثاء</span><span>أربعاء</span><span>خميس</span
+                  ><span>جمعة</span>
+                </div>
+                <div id="days-grid-g" class="days-grid"></div>
+              </div>
+
+              <div class="calendar-divider"></div>
+
+              <div class="calendar-section hijri-section">
+                <div class="month-selector">
+                  <button id="prev-month-h" class="month-nav-btn">
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                  <span id="current-month-display-h"></span>
+                  <button id="next-month-h" class="month-nav-btn">
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+                </div>
+                <div class="days-header">
+                  <span>سبت</span><span>أحد</span><span>اثنين</span
+                  ><span>ثلاثاء</span><span>أربعاء</span><span>خميس</span
+                  ><span>جمعة</span>
+                </div>
+                <div id="days-grid-h" class="days-grid"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="global-progress-container">
+            <div class="progress-label">
+              <span>إنجاز اليوم</span>
+              <span id="total-score">0%</span>
+            </div>
+            <div class="progress-track">
+              <div
+                id="global-progress-bar"
+                class="progress-fill"
+                style="width: 0%"
+              ></div>
+            </div>
+          </div>
+          <div
+            id="setup-modal"
+            class="modal-overlay hidden"
+            style="z-index: 3000"
+          >
+            <div class="liquid-modal">
               <div class="modal-header">
-                  <h3>إعداد حسابك</h3>
-                  <button id="close-setup-modal" class="close-btn" aria-label="إغلاق">&times;</button>
+                <h3>إعداد حسابك</h3>
+                <button
+                  id="close-setup-modal"
+                  class="close-btn"
+                  aria-label="إغلاق"
+                >
+                  &times;
+                </button>
               </div>
               <div class="modal-body">
-                  <p style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.9rem;">لنخصص التجربة لك، نحتاج لبعض البيانات.</p>
-                  
-                  <div class="form-group">
-                      <label>الاسم </label>
-                      <input type="text" id="setup-name" placeholder="الاسم الذي تود أن نناديك به">
-                  </div>
+                <p
+                  style="
+                    margin-bottom: 1rem;
+                    color: var(--text-secondary);
+                    font-size: 0.9rem;
+                  "
+                >
+                  لنخصص التجربة لك، نحتاج لبعض البيانات.
+                </p>
 
-                  <div class="form-group">
-                      <label>الجنس (لتخصيص الأحكام الفقهية)</label>
-                      <select id="setup-gender" class="glass-input">
-                          <option value="male">ذكر</option>
-                          <option value="female">أنثى</option>
-                      </select>
-                  </div>
-
-                  <div class="form-group">
-                      <label>الورد القرآني اليومي المستهدف</label>
-                      <input type="text" id="setup-quran-goal" placeholder="مثال: جزء، ربعين، صفحة...">
-                  </div>
-
-                  <div class="form-group">
-                      <label>الموقع الجغرافي (لمواقيت الصلاة)</label>
-                      <button id="get-location-btn" class="task-btn toggle-btn" style="width:100%; display:flex; gap:10px; justify-content:center; align-items:center;">
-                          <i class="fa-solid fa-location-dot"></i> تحديد موقعي تلقائياً
-                      </button>
-                      <p id="location-status" style="font-size: 0.8rem; margin-top: 5px; color: var(--accent-color);"></p>
-                  </div>
-
-                  <div class="form-group">
-                    <label>مستواك الحالي (لضبط كمية الأذكار)</label>
-                    <select id="setup-level" class="glass-input">
-                        <option value="3">مجتهد (الورد الكامل - كل الأذكار)</option>
-                        <option value="2">متوسط (أهم الأذكار والسنن)</option>
-                        <option value="1">مبتدئ (التحصين الأساسي فقط)</option>
-                    </select>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 5px;">
-                        يمكنك تغيير المستوى لاحقاً مع تطور همتك.
-                    </p>
+                <div class="form-group">
+                  <label>الاسم </label>
+                  <input
+                    type="text"
+                    id="setup-name"
+                    placeholder="الاسم الذي تود أن نناديك به"
+                  />
                 </div>
 
-                  <hr style="border-color: var(--glass-border); margin: 1.5rem 0;">
-                  <h4 style="margin-bottom: 1rem; color: var(--accent-color);"><i class="fa-solid fa-bell"></i> مواعيد التنبيهات</h4>
-                  
-                  <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
-                      <label style="margin:0;">تفعيل الإشعارات</label>
-                      <button id="enable-notify-btn" class="btn-primary" style="padding: 5px 10px; font-size: 0.8rem;">تفعيل الآن</button>
-                  </div>
+                <div class="form-group">
+                  <label>الجنس (لتخصيص الأحكام الفقهية)</label>
+                  <select id="setup-gender" class="glass-input">
+                    <option value="male">ذكر</option>
+                    <option value="female">أنثى</option>
+                  </select>
+                </div>
 
-                  <div class="form-group">
-                      <label>وقت أذكار الصباح</label>
-                      <input type="time" id="setup-morning-time" class="glass-input">
-                  </div>
+                <div class="form-group">
+                  <label>الورد القرآني اليومي المستهدف</label>
+                  <input
+                    type="text"
+                    id="setup-quran-goal"
+                    placeholder="مثال: جزء، ربعين، صفحة..."
+                  />
+                </div>
 
-                  <div class="form-group">
-                      <label>وقت أذكار المساء</label>
-                      <input type="time" id="setup-evening-time" class="glass-input">
-                  </div>
+                <div class="form-group">
+                  <label>الموقع الجغرافي (لمواقيت الصلاة)</label>
+                  <button
+                    id="get-location-btn"
+                    class="task-btn toggle-btn"
+                    style="
+                      width: 100%;
+                      display: flex;
+                      gap: 10px;
+                      justify-content: center;
+                      align-items: center;
+                    "
+                  >
+                    <i class="fa-solid fa-location-dot"></i> تحديد موقعي
+                    تلقائياً
+                  </button>
+                  <p
+                    id="location-status"
+                    style="
+                      font-size: 0.8rem;
+                      margin-top: 5px;
+                      color: var(--accent-color);
+                    "
+                  ></p>
+                </div>
 
-                  <div class="form-group">
-                      <label>موعد التذكير بالورد القرآني</label>
-                      <input type="time" id="setup-wird-time" class="glass-input">
-                  </div>
+                <div class="form-group">
+                  <label>مستواك الحالي (لضبط كمية الأذكار)</label>
+                  <select id="setup-level" class="glass-input">
+                    <option value="3">مجتهد (الورد الكامل - كل الأذكار)</option>
+                    <option value="2">متوسط (أهم الأذكار والسنن)</option>
+                    <option value="1">مبتدئ (التحصين الأساسي فقط)</option>
+                  </select>
+                  <p
+                    style="
+                      font-size: 0.8rem;
+                      color: var(--text-secondary);
+                      margin-top: 5px;
+                    "
+                  >
+                    يمكنك تغيير المستوى لاحقاً مع تطور همتك.
+                  </p>
+                </div>
 
+                <hr
+                  style="border-color: var(--glass-border); margin: 1.5rem 0"
+                />
+                <h4 style="margin-bottom: 1rem; color: var(--accent-color)">
+                  <i class="fa-solid fa-bell"></i> مواعيد التنبيهات
+                </h4>
+
+                <div
+                  class="form-group"
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                  "
+                >
+                  <label style="margin: 0">تفعيل الإشعارات</label>
+                  <button
+                    id="enable-notify-btn"
+                    class="btn-primary"
+                    style="padding: 5px 10px; font-size: 0.8rem"
+                  >
+                    تفعيل الآن
+                  </button>
+                </div>
+
+                <div class="form-group">
+                  <label>وقت أذكار الصباح</label>
+                  <input
+                    type="time"
+                    id="setup-morning-time"
+                    class="glass-input"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label>وقت أذكار المساء</label>
+                  <input
+                    type="time"
+                    id="setup-evening-time"
+                    class="glass-input"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label>موعد التذكير بالورد القرآني</label>
+                  <input type="time" id="setup-wird-time" class="glass-input" />
+                </div>
               </div>
               <div class="modal-footer">
-                  <button id="save-setup-btn" class="btn-primary" style="width: 100%;" disabled>حفظ وبدء الرحلة</button>
+                <button
+                  id="save-setup-btn"
+                  class="btn-primary"
+                  style="width: 100%"
+                  disabled
+                >
+                  حفظ وبدء الرحلة
+                </button>
               </div>
-          </div>
-      </div>
-
-        <div class="prayers-container">
-
-          <div class="prayer-item" id="fajr-card" data-aos="fade-up">
-            <div class="prayer-header-wrapper">
-              <span class="prayer-name">الفجر</span>
-              <span class="prayer-timer" id="timer-fajr">--:--:--</span>
-            </div>
-            <div class="prayer-content-grid">
-              <div class="task-box">
-                <h4 class="box-title">الصلاة</h4>
-                <button class="task-btn prayer-btn" data-type="mosque" data-points="3">صلاة في المسجد (3 نقاط)</button>
-                <button class="task-btn prayer-btn" data-points="2">على الوقت في البيت (2 نقطة)</button>
-                <button class="task-btn prayer-btn" data-points="1">تأخرت ولكن داخل وقتها (1 نقطة)</button>
-              </div>
-              <div class="task-box">
-                <h4 class="box-title">أذكار بعد الصلاة</h4>
-                <button class="task-btn action-btn" onclick="openAdhkar('post_fajr')">عرض الأذكار (2 نقطة)</button>
-                <div class="adhkar-progress-track">
-                  <div class="adhkar-progress-fill" id="progress-post_fajr" style="width: 0%"></div>
-                </div>
-              </div>
-              <div class="task-box">
-                <h4 class="box-title">أذكار الصباح</h4>
-                <button class="task-btn action-btn" onclick="openAdhkar('morning')">عرض الأذكار (2 نقطة)</button>
-                <button class="task-btn toggle-btn" data-points="2">صلاة الضحى - 4 ركعات (2 نقطة)</button>
-                <div class="adhkar-progress-track">
-                  <div class="adhkar-progress-fill" id="progress-morning" style="width: 0%"></div>
-                </div>
-              </div>
-              <div class="task-box">
-                <h4 class="box-title">سنن الصلاة</h4>
-                <button class="task-btn toggle-btn" data-points="2">سنة الفجر القبلية (2 نقطة)</button>
-              </div>
-              <div class="task-box">
-                <h4 class="box-title">أذكار الاستيقاظ</h4>
-                <button class="task-btn action-btn" onclick="openAdhkar('wakeup')">عرض الأذكار (2 نقطة)</button>
-                <div class="adhkar-progress-track">
-                  <div class="adhkar-progress-fill" id="progress-wakeup" style="width: 0%"></div>
-                </div>
-              </div>
-              <button class="add-prayer-extra-btn" data-prayer="fajr">
-                <i class="fa-solid fa-plus"></i>
-              </button>
             </div>
           </div>
 
-          <div class="prayer-item" id="dhuhr-card" data-aos="fade-up">
-            <div class="prayer-header-wrapper">
-              <span class="prayer-name">الظهر</span>
-              <span class="prayer-timer" id="timer-dhuhr">--:--:--</span>
+          <div class="prayers-container">
+            <div class="prayer-item" id="fajr-card" data-aos="fade-up">
+              <div class="prayer-header-wrapper">
+                <span class="prayer-name">الفجر</span>
+                <span class="prayer-timer" id="timer-fajr">--:--:--</span>
+              </div>
+              <div class="prayer-content-grid">
+                <div class="task-box">
+                  <h4 class="box-title">الصلاة</h4>
+                  <button
+                    class="task-btn prayer-btn"
+                    data-type="mosque"
+                    data-points="3"
+                  >
+                    صلاة في المسجد (3 نقاط)
+                  </button>
+                  <button class="task-btn prayer-btn" data-points="2">
+                    على الوقت في البيت (2 نقطة)
+                  </button>
+                  <button class="task-btn prayer-btn" data-points="1">
+                    تأخرت ولكن داخل وقتها (1 نقطة)
+                  </button>
+                </div>
+                <div class="task-box">
+                  <h4 class="box-title">أذكار بعد الصلاة</h4>
+                  <button
+                    class="task-btn action-btn"
+                    onclick="openAdhkar('post_fajr')"
+                  >
+                    عرض الأذكار (2 نقطة)
+                  </button>
+                  <div class="adhkar-progress-track">
+                    <div
+                      class="adhkar-progress-fill"
+                      id="progress-post_fajr"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                </div>
+                <div class="task-box">
+                  <h4 class="box-title">أذكار الصباح</h4>
+                  <button
+                    class="task-btn action-btn"
+                    onclick="openAdhkar('morning')"
+                  >
+                    عرض الأذكار (2 نقطة)
+                  </button>
+                  <button class="task-btn toggle-btn" data-points="2">
+                    صلاة الضحى - 4 ركعات (2 نقطة)
+                  </button>
+                  <div class="adhkar-progress-track">
+                    <div
+                      class="adhkar-progress-fill"
+                      id="progress-morning"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                </div>
+                <div class="task-box">
+                  <h4 class="box-title">سنن الصلاة</h4>
+                  <button class="task-btn toggle-btn" data-points="2">
+                    سنة الفجر القبلية (2 نقطة)
+                  </button>
+                </div>
+                <div class="task-box">
+                  <h4 class="box-title">أذكار الاستيقاظ</h4>
+                  <button
+                    class="task-btn action-btn"
+                    onclick="openAdhkar('wakeup')"
+                  >
+                    عرض الأذكار (2 نقطة)
+                  </button>
+                  <div class="adhkar-progress-track">
+                    <div
+                      class="adhkar-progress-fill"
+                      id="progress-wakeup"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                </div>
+                <button class="add-prayer-extra-btn" data-prayer="fajr">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
             </div>
-            <div class="prayer-content-grid">
-              <div class="task-box">
-                <h4 class="box-title">الصلاة</h4>
-                <button class="task-btn prayer-btn" data-type="mosque" data-points="3">صلاة في المسجد (3 نقاط)</button>
-                <button class="task-btn prayer-btn" data-points="2">على الوقت في البيت (2 نقطة)</button>
-                <button class="task-btn prayer-btn" data-points="1">تأخرت ولكن داخل وقتها (1 نقطة)</button>
+
+            <div class="prayer-item" id="dhuhr-card" data-aos="fade-up">
+              <div class="prayer-header-wrapper">
+                <span class="prayer-name">الظهر</span>
+                <span class="prayer-timer" id="timer-dhuhr">--:--:--</span>
               </div>
-              <div class="task-box">
-                <h4 class="box-title">أذكار بعد الصلاة</h4>
-                <button class="task-btn action-btn" onclick="openAdhkar('post_dhuhr')">عرض الأذكار (2 نقطة)</button>
-                <div class="adhkar-progress-track">
-                  <div class="adhkar-progress-fill" id="progress-post_dhuhr" style="width: 0%"></div>
+              <div class="prayer-content-grid">
+                <div class="task-box">
+                  <h4 class="box-title">الصلاة</h4>
+                  <button
+                    class="task-btn prayer-btn"
+                    data-type="mosque"
+                    data-points="3"
+                  >
+                    صلاة في المسجد (3 نقاط)
+                  </button>
+                  <button class="task-btn prayer-btn" data-points="2">
+                    على الوقت في البيت (2 نقطة)
+                  </button>
+                  <button class="task-btn prayer-btn" data-points="1">
+                    تأخرت ولكن داخل وقتها (1 نقطة)
+                  </button>
                 </div>
+                <div class="task-box">
+                  <h4 class="box-title">أذكار بعد الصلاة</h4>
+                  <button
+                    class="task-btn action-btn"
+                    onclick="openAdhkar('post_dhuhr')"
+                  >
+                    عرض الأذكار (2 نقطة)
+                  </button>
+                  <div class="adhkar-progress-track">
+                    <div
+                      class="adhkar-progress-fill"
+                      id="progress-post_dhuhr"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                </div>
+                <div class="task-box">
+                  <h4 class="box-title">سنن الصلاة</h4>
+                  <button class="task-btn toggle-btn" data-points="2">
+                    سنة قبلية - 4 ركعات (2 نقطة)
+                  </button>
+                  <button class="task-btn toggle-btn" data-points="2">
+                    سنة بعدية - ركعتين (2 نقطة)
+                  </button>
+                </div>
+                <button class="add-prayer-extra-btn" data-prayer="dhuhr">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
               </div>
-              <div class="task-box">
-                <h4 class="box-title">سنن الصلاة</h4>
-                <button class="task-btn toggle-btn" data-points="2">سنة قبلية - 4 ركعات (2 نقطة)</button>
-                <button class="task-btn toggle-btn" data-points="2">سنة بعدية - ركعتين (2 نقطة)</button>
-              </div>
-              <button class="add-prayer-extra-btn" data-prayer="dhuhr">
-                <i class="fa-solid fa-plus"></i>
-              </button>
             </div>
-          </div>
 
-          <div class="prayer-item" id="asr-card" data-aos="fade-up">
-            <div class="prayer-header-wrapper">
-              <span class="prayer-name">العصر</span>
-              <span class="prayer-timer" id="timer-asr">--:--:--</span>
-            </div>            
-            <div class="prayer-content-grid">
-              <div class="task-box">
-                <h4 class="box-title">الصلاة</h4>
-                <button class="task-btn prayer-btn" data-type="mosque" data-points="3">صلاة في المسجد (3 نقاط)</button>
-                <button class="task-btn prayer-btn" data-points="2">على الوقت في البيت (2 نقطة)</button>
-                <button class="task-btn prayer-btn" data-points="1">تأخرت ولكن داخل وقتها (1 نقطة)</button>
+            <div class="prayer-item" id="asr-card" data-aos="fade-up">
+              <div class="prayer-header-wrapper">
+                <span class="prayer-name">العصر</span>
+                <span class="prayer-timer" id="timer-asr">--:--:--</span>
               </div>
-              <div class="task-box">
-                <h4 class="box-title">أذكار بعد الصلاة</h4>
-                <button class="task-btn action-btn" onclick="openAdhkar('post_asr')">عرض الأذكار (2 نقطة)</button>
-                <div class="adhkar-progress-track">
-                  <div class="adhkar-progress-fill" id="progress-post_asr" style="width: 0%"></div>
+              <div class="prayer-content-grid">
+                <div class="task-box">
+                  <h4 class="box-title">الصلاة</h4>
+                  <button
+                    class="task-btn prayer-btn"
+                    data-type="mosque"
+                    data-points="3"
+                  >
+                    صلاة في المسجد (3 نقاط)
+                  </button>
+                  <button class="task-btn prayer-btn" data-points="2">
+                    على الوقت في البيت (2 نقطة)
+                  </button>
+                  <button class="task-btn prayer-btn" data-points="1">
+                    تأخرت ولكن داخل وقتها (1 نقطة)
+                  </button>
                 </div>
-              </div>
-              <div class="task-box">
-                <h4 class="box-title">أذكار المساء</h4>
-                <button class="task-btn action-btn" onclick="openAdhkar('evening')">عرض الأذكار (2 نقطة)</button>
-                <div class="adhkar-progress-track">
-                  <div class="adhkar-progress-fill" id="progress-evening" style="width: 0%"></div>
+                <div class="task-box">
+                  <h4 class="box-title">أذكار بعد الصلاة</h4>
+                  <button
+                    class="task-btn action-btn"
+                    onclick="openAdhkar('post_asr')"
+                  >
+                    عرض الأذكار (2 نقطة)
+                  </button>
+                  <div class="adhkar-progress-track">
+                    <div
+                      class="adhkar-progress-fill"
+                      id="progress-post_asr"
+                      style="width: 0%"
+                    ></div>
+                  </div>
                 </div>
+                <div class="task-box">
+                  <h4 class="box-title">أذكار المساء</h4>
+                  <button
+                    class="task-btn action-btn"
+                    onclick="openAdhkar('evening')"
+                  >
+                    عرض الأذكار (2 نقطة)
+                  </button>
+                  <div class="adhkar-progress-track">
+                    <div
+                      class="adhkar-progress-fill"
+                      id="progress-evening"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                </div>
+                <button class="add-prayer-extra-btn" data-prayer="asr">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
               </div>
-              <button class="add-prayer-extra-btn" data-prayer="asr">
-                <i class="fa-solid fa-plus"></i>
-              </button>
             </div>
-          </div>
 
-          <div class="prayer-item" id="maghrib-card" data-aos="fade-up">
-            <div class="prayer-header-wrapper">
-              <span class="prayer-name">المغرب</span>
-              <span class="prayer-timer" id="timer-maghrib">--:--:--</span>
-            </div>  
-            <div class="prayer-content-grid">
-              <div class="task-box">
-                <h4 class="box-title">الصلاة</h4>
-                <button class="task-btn prayer-btn" data-type="mosque" data-points="3">صلاة في المسجد (3 نقاط)</button>
-                <button class="task-btn prayer-btn" data-points="2">على الوقت في البيت (2 نقطة)</button>
-                <button class="task-btn prayer-btn" data-points="1">تأخرت ولكن داخل وقتها (1 نقطة)</button>
+            <div class="prayer-item" id="maghrib-card" data-aos="fade-up">
+              <div class="prayer-header-wrapper">
+                <span class="prayer-name">المغرب</span>
+                <span class="prayer-timer" id="timer-maghrib">--:--:--</span>
               </div>
-              <div class="task-box">
-                <h4 class="box-title">أذكار بعد الصلاة</h4>
-                <button class="task-btn action-btn" onclick="openAdhkar('post_maghrib')">عرض الأذكار (2 نقطة)</button>
-                <div class="adhkar-progress-track">
-                  <div class="adhkar-progress-fill" id="progress-post_maghrib" style="width: 0%"></div>
+              <div class="prayer-content-grid">
+                <div class="task-box">
+                  <h4 class="box-title">الصلاة</h4>
+                  <button
+                    class="task-btn prayer-btn"
+                    data-type="mosque"
+                    data-points="3"
+                  >
+                    صلاة في المسجد (3 نقاط)
+                  </button>
+                  <button class="task-btn prayer-btn" data-points="2">
+                    على الوقت في البيت (2 نقطة)
+                  </button>
+                  <button class="task-btn prayer-btn" data-points="1">
+                    تأخرت ولكن داخل وقتها (1 نقطة)
+                  </button>
                 </div>
+                <div class="task-box">
+                  <h4 class="box-title">أذكار بعد الصلاة</h4>
+                  <button
+                    class="task-btn action-btn"
+                    onclick="openAdhkar('post_maghrib')"
+                  >
+                    عرض الأذكار (2 نقطة)
+                  </button>
+                  <div class="adhkar-progress-track">
+                    <div
+                      class="adhkar-progress-fill"
+                      id="progress-post_maghrib"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                </div>
+                <div class="task-box">
+                  <h4 class="box-title">سنن الصلاة</h4>
+                  <button class="task-btn toggle-btn" data-points="2">
+                    سنة بعدية (2 نقطة)
+                  </button>
+                </div>
+                <button class="add-prayer-extra-btn" data-prayer="maghrib">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
               </div>
-              <div class="task-box">
-                <h4 class="box-title">سنن الصلاة</h4>
-                <button class="task-btn toggle-btn" data-points="2">سنة بعدية (2 نقطة)</button>
-              </div>
-              <button class="add-prayer-extra-btn" data-prayer="maghrib">
-                <i class="fa-solid fa-plus"></i>
-              </button>
             </div>
-          </div>
 
-          <div class="prayer-item" id="isha-card" data-aos="fade-up">
-            <div class="prayer-header-wrapper">
-              <span class="prayer-name">العشاء</span>
-              <span class="prayer-timer" id="timer-isha">--:--:--</span>
-            </div>  
-            <div class="prayer-content-grid">
-              <div class="task-box">
-                <h4 class="box-title">الصلاة</h4>
-                <button class="task-btn prayer-btn" data-type="mosque" data-points="3">صلاة في المسجد (3 نقاط)</button>
-                <button class="task-btn prayer-btn" data-points="2">على الوقت في البيت (2 نقطة)</button>
-                <button class="task-btn prayer-btn" data-points="1">تأخرت ولكن داخل وقتها (1 نقطة)</button>
+            <div class="prayer-item" id="isha-card" data-aos="fade-up">
+              <div class="prayer-header-wrapper">
+                <span class="prayer-name">العشاء</span>
+                <span class="prayer-timer" id="timer-isha">--:--:--</span>
               </div>
-              <div class="task-box">
-                <h4 class="box-title">أذكار بعد الصلاة</h4>
-                <button class="task-btn action-btn" onclick="openAdhkar('post_isha')">عرض الأذكار (2 نقطة)</button>
-                <div class="adhkar-progress-track">
-                  <div class="adhkar-progress-fill" id="progress-post_isha" style="width: 0%"></div>
+              <div class="prayer-content-grid">
+                <div class="task-box">
+                  <h4 class="box-title">الصلاة</h4>
+                  <button
+                    class="task-btn prayer-btn"
+                    data-type="mosque"
+                    data-points="3"
+                  >
+                    صلاة في المسجد (3 نقاط)
+                  </button>
+                  <button class="task-btn prayer-btn" data-points="2">
+                    على الوقت في البيت (2 نقطة)
+                  </button>
+                  <button class="task-btn prayer-btn" data-points="1">
+                    تأخرت ولكن داخل وقتها (1 نقطة)
+                  </button>
                 </div>
-              </div>
-              <div class="task-box">
-                <h4 class="box-title">سنن الصلاة</h4>
-                <button class="task-btn toggle-btn" data-points="2">سنة بعدية (2 نقطة)</button>
-              </div>
-              <button class="add-prayer-extra-btn" data-prayer="isha">
-                <i class="fa-solid fa-plus"></i>
-              </button>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <section id="section-ibadat" class="ibadat-section mobile-page-section" data-mobile-page="ibadat" data-aos="fade-up">
-      <div class="container">
-        <div class="prayer-item">
-          <span class="prayer-name">ركن العبادات</span>
-          <div class="prayer-content-grid">
-            <div class="task-box full-width-box">
-              <h4 class="box-title">نوافل ومهام</h4>
-              <div class="ibadat-grid" id="ibadat-grid">
-                <div class="ibada-box" data-id="qiyam" data-points="4">
-                  <h3 class="ibada-title">قيام الليل (4 نقاط)</h3>
-                  <div class="ibada-status"></div>
+                <div class="task-box">
+                  <h4 class="box-title">أذكار بعد الصلاة</h4>
+                  <button
+                    class="task-btn action-btn"
+                    onclick="openAdhkar('post_isha')"
+                  >
+                    عرض الأذكار (2 نقطة)
+                  </button>
+                  <div class="adhkar-progress-track">
+                    <div
+                      class="adhkar-progress-fill"
+                      id="progress-post_isha"
+                      style="width: 0%"
+                    ></div>
+                  </div>
                 </div>
-                <div class="ibada-box" data-id="witr" data-points="2">
-                  <h3 class="ibada-title">ركعة الوتر (2 نقطة)</h3>
-                  <div class="ibada-status"></div>
+                <div class="task-box">
+                  <h4 class="box-title">سنن الصلاة</h4>
+                  <button class="task-btn toggle-btn" data-points="2">
+                    سنة بعدية (2 نقطة)
+                  </button>
                 </div>
-                <div class="ibada-box" data-id="quran" data-points="4">
-                  <h3 class="ibada-title">ورد القرآن - ربعين (4 نقاط)</h3>
-                  <div class="ibada-status"></div>
-                </div>
-                <button id="add-worship-btn" class="add-worship-btn">
+                <button class="add-prayer-extra-btn" data-prayer="isha">
                   <i class="fa-solid fa-plus"></i>
                 </button>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
 
-  <div id="add-worship-modal" class="modal-overlay hidden">
-    <div class="liquid-modal">
-      <div class="modal-header">
-        <h3>إضافة عبادة جديدة</h3>
-        <button id="close-worship-modal" class="close-btn">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="worship-name">اسم العبادة</label>
-          <input type="text" id="worship-name" placeholder="مثال: الصيام ">
+      <section
+        id="section-ibadat"
+        class="ibadat-section mobile-page-section"
+        data-mobile-page="ibadat"
+        data-aos="fade-up"
+      >
+        <div class="container">
+          <div class="prayer-item">
+            <span class="prayer-name">ركن العبادات</span>
+            <div class="prayer-content-grid">
+              <div class="task-box full-width-box">
+                <h4 class="box-title">نوافل ومهام</h4>
+                <div class="ibadat-grid" id="ibadat-grid">
+                  <div class="ibada-box" data-id="qiyam" data-points="4">
+                    <h3 class="ibada-title">قيام الليل (4 نقاط)</h3>
+                    <div class="ibada-status"></div>
+                  </div>
+                  <div class="ibada-box" data-id="witr" data-points="2">
+                    <h3 class="ibada-title">ركعة الوتر (2 نقطة)</h3>
+                    <div class="ibada-status"></div>
+                  </div>
+                  <div class="ibada-box" data-id="quran" data-points="4">
+                    <h3 class="ibada-title">ورد القرآن - ربعين (4 نقاط)</h3>
+                    <div class="ibada-status"></div>
+                  </div>
+                  <button id="add-worship-btn" class="add-worship-btn">
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="worship-time">وقت التنفيذ</label>
-          <input type="text" id="worship-time" placeholder="مثال: الإثنين والخميس ">
+      </section>
+    </main>
+
+    <div id="add-worship-modal" class="modal-overlay hidden">
+      <div class="liquid-modal">
+        <div class="modal-header">
+          <h3>إضافة عبادة جديدة</h3>
+          <button id="close-worship-modal" class="close-btn">&times;</button>
         </div>
-        <div class="form-group">
-          <label for="worship-points">عدد النقاط</label>
-          <select id="worship-points" class="glass-input">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-          </select>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="worship-name">اسم العبادة</label>
+            <input type="text" id="worship-name" placeholder="مثال: الصيام " />
+          </div>
+          <div class="form-group">
+            <label for="worship-time">وقت التنفيذ</label>
+            <input
+              type="text"
+              id="worship-time"
+              placeholder="مثال: الإثنين والخميس "
+            />
+          </div>
+          <div class="form-group">
+            <label for="worship-points">عدد النقاط</label>
+            <select id="worship-points" class="glass-input">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button id="save-worship-btn" class="btn-primary">حفظ</button>
+        <div class="modal-footer">
+          <button id="save-worship-btn" class="btn-primary">حفظ</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div id="adhkar-modal" class="adhkar-modal hidden">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 id="modal-title">الأذكار</h3>
-        <button id="close-modal" class="close-btn">&times;</button>
-      </div>
-      <div id="adhkar-list" class="adhkar-list no-scrollbar"></div>
-      <div class="modal-footer">
-        <button id="complete-adhkar-btn" class="btn-primary">إتمام</button>
+    <div id="adhkar-modal" class="adhkar-modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modal-title">الأذكار</h3>
+          <button id="close-modal" class="close-btn">&times;</button>
+        </div>
+        <div id="adhkar-list" class="adhkar-list no-scrollbar"></div>
+        <div class="modal-footer">
+          <button id="complete-adhkar-btn" class="btn-primary">إتمام</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div id="extra-prayer-modal" class="modal-overlay hidden">
-    <div class="liquid-modal">
-      <div class="modal-header">
-        <h3>إضافة نافلة</h3>
-        <button id="close-extra-modal" class="close-btn">&times;</button>
+    <div id="extra-prayer-modal" class="modal-overlay hidden">
+      <div class="liquid-modal">
+        <div class="modal-header">
+          <h3>إضافة نافلة</h3>
+          <button id="close-extra-modal" class="close-btn">&times;</button>
+        </div>
+        <div id="extra-worship-list" class="adhkar-list no-scrollbar"></div>
       </div>
-      <div id="extra-worship-list" class="adhkar-list no-scrollbar"></div>
     </div>
-  </div>
 
-  <section id="section-warnings" class="warning-section mobile-page-section" data-mobile-page="warnings" data-aos="fade-up">
-    <div class="container">
-      <div class="prayer-item warning-container">
-        <span class="prayer-name" style="color: #ef4444; border-color: #ef4444;">احذر المهلكات "لكل مهلكة قصة ومن كل قصة عظة، فاتعظ!"</span>
-        
-        <div class="warning-grid">
-          <div class="warning-box" onclick="openWarning('lying')">
+    <section
+      id="section-warnings"
+      class="warning-section mobile-page-section"
+      data-mobile-page="warnings"
+      data-aos="fade-up"
+    >
+      <div class="container">
+        <div class="prayer-item warning-container">
+          <span
+            class="prayer-name"
+            style="color: #ef4444; border-color: #ef4444"
+            >احذر المهلكات "لكل مهلكة قصة ومن كل قصة عظة، فاتعظ!"</span
+          >
+
+          <div class="warning-grid">
+            <div class="warning-box" onclick="openWarning('lying')">
               <i class="fa-solid fa-comment-slash warning-icon"></i>
               <h3 class="warning-title">الكذب</h3>
-          </div>
+            </div>
 
-          <div class="warning-box" onclick="openWarning('backbiting')">
+            <div class="warning-box" onclick="openWarning('backbiting')">
               <i class="fa-solid fa-users-slash warning-icon"></i>
               <h3 class="warning-title">الغيبة</h3>
-          </div>
+            </div>
 
-          <div class="warning-box" onclick="openWarning('gazing')">
+            <div class="warning-box" onclick="openWarning('gazing')">
               <i class="fa-solid fa-eye-slash warning-icon"></i>
               <h3 class="warning-title">إطلاق البصر</h3>
-          </div>
+            </div>
 
-          <div class="warning-box" onclick="openWarning('cursing')">
+            <div class="warning-box" onclick="openWarning('cursing')">
               <i class="fa-solid fa-face-angry warning-icon"></i>
               <h3 class="warning-title">السب واللعن</h3>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <div id="warning-modal" class="modal-overlay hidden">
-    <div class="liquid-modal warning-modal-content">
+    <div id="warning-modal" class="modal-overlay hidden">
+      <div class="liquid-modal warning-modal-content">
         <div class="modal-header">
-            <h3 id="warning-modal-title" style="color: #ef4444;">عنوان التحذير</h3>
-            <button id="close-warning-modal" class="close-btn">&times;</button>
+          <h3 id="warning-modal-title" style="color: #ef4444">عنوان التحذير</h3>
+          <button id="close-warning-modal" class="close-btn">&times;</button>
         </div>
-        
+
         <div class="modal-body warning-body">
-            
-            <div class="definition-box">
-                <h4 class="mini-title"><i class="fa-solid fa-circle-info"></i> المفهوم:</h4>
-                <p id="warning-def">هنا يظهر التعريف...</p>
-            </div>
+          <div class="definition-box">
+            <h4 class="mini-title">
+              <i class="fa-solid fa-circle-info"></i> المفهوم:
+            </h4>
+            <p id="warning-def">هنا يظهر التعريف...</p>
+          </div>
 
-            <div class="daily-example-box">
-                <h4 class="mini-title"><i class="fa-solid fa-calendar-day"></i> مثال من واقعنا (يومي):</h4>
-                <p id="warning-daily-example">هنا يظهر المثال اليومي...</p>
-            </div>
+          <div class="daily-example-box">
+            <h4 class="mini-title">
+              <i class="fa-solid fa-calendar-day"></i> مثال من واقعنا (يومي):
+            </h4>
+            <p id="warning-daily-example">هنا يظهر المثال اليومي...</p>
+          </div>
 
-            <div class="quran-quote">
-                <i class="fa-solid fa-book"></i>
-                <p id="warning-quran"></p>
-            </div>
-            <div class="hadith-quote">
-                <i class="fa-solid fa-scroll"></i>
-                <p id="warning-hadith"></p>
-            </div>
+          <div class="quran-quote">
+            <i class="fa-solid fa-book"></i>
+            <p id="warning-quran"></p>
+          </div>
+          <div class="hadith-quote">
+            <i class="fa-solid fa-scroll"></i>
+            <p id="warning-hadith"></p>
+          </div>
 
-            <div class="story-section">
-                <button id="btn-show-story" class="btn-primary story-btn">
-                    <i class="fa-solid fa-book-open"></i> اقرأ قصة من السيرة
-                </button>
-                <div id="warning-story-content" class="story-content hidden">
-                    <p id="story-text"></p>
-                </div>
+          <div class="story-section">
+            <button id="btn-show-story" class="btn-primary story-btn">
+              <i class="fa-solid fa-book-open"></i> اقرأ قصة من السيرة
+            </button>
+            <div id="warning-story-content" class="story-content hidden">
+              <p id="story-text"></p>
             </div>
-
+          </div>
         </div>
+      </div>
     </div>
-</div>
 
-  <section id="section-reflection" class="reflection-section mobile-page-section" data-mobile-page="home" data-aos="fade-up">
-    <div class="container">
-      <div class="prayer-item">
-        <div class="reflection-header">
-            <h3 id="reflection-title" class="box-title" style="font-size: 1.4rem; margin-bottom: 0.5rem;">ما سبب هذا التقصير اليوم؟</h3>
+    <section
+      id="section-reflection"
+      class="reflection-section mobile-page-section"
+      data-mobile-page="home"
+      data-aos="fade-up"
+    >
+      <div class="container">
+        <div class="prayer-item">
+          <div class="reflection-header">
+            <h3
+              id="reflection-title"
+              class="box-title"
+              style="font-size: 1.4rem; margin-bottom: 0.5rem"
+            >
+              ما سبب هذا التقصير اليوم؟
+            </h3>
             <p class="reflection-hint">
-                الهدف ليس الجلد، بل الفهم. دون هنا ما أعانك لتكرره، أو ما شغلك لتتجنبه.
+              الهدف ليس الجلد، بل الفهم. دون هنا ما أعانك لتكرره، أو ما شغلك
+              لتتجنبه.
             </p>
-        </div>
-        
-        <textarea id="reflection-input" class="glass-textarea" placeholder="اكتب خواطرك عن يومك هنا... (مثلاً: نمت متأخراً ففاتني الفجر، أو صحبة صالحة شجعتني...)"></textarea>
-        
-        <button id="download-report-btn" class="btn-primary" style="width: 100%; margin-top: 1.5rem;">
+          </div>
+
+          <textarea
+            id="reflection-input"
+            class="glass-textarea"
+            placeholder="اكتب خواطرك عن يومك هنا... (مثلاً: نمت متأخراً ففاتني الفجر، أو صحبة صالحة شجعتني...)"
+          ></textarea>
+
+          <button
+            id="download-report-btn"
+            class="btn-primary"
+            style="width: 100%; margin-top: 1.5rem"
+          >
             <i class="fa-solid fa-file-word"></i> حفظ وتنزيل التقرير
-        </button>
-      </div>
-    </div>
-  </section>
-  <section id="analytics-section" class="accountability-section mobile-page-section" data-mobile-page="analytics" data-aos="fade-up">
-    <div class="container">
-      <div class="prayer-item" style="border-color: var(--accent-color);">
-        
-        <div class="prayer-header-wrapper" style="border-bottom: none; margin-bottom: 1rem; flex-direction: column; gap: 15px;">
-          <span class="prayer-name" style="color: var(--accent-color); border:none;">حصادك الإيماني</span>
-          
-          <div class="tabs-container">
-            <button class="tab-btn active" onclick="switchTab('main')">الرئيسية</button>
-            <button class="tab-btn" onclick="switchTab('daily')">التفاصيل اليومية</button>
-            <button class="tab-btn" onclick="switchTab('weekly')">أرشيف الأسابيع</button>
-            <button class="tab-btn" onclick="switchTab('monthly')">أرشيف الشهور</button>
-          </div>
+          </button>
         </div>
+      </div>
+    </section>
+    <section
+      id="analytics-section"
+      class="accountability-section mobile-page-section"
+      data-mobile-page="analytics"
+      data-aos="fade-up"
+    >
+      <div class="container">
+        <div class="prayer-item" style="border-color: var(--accent-color)">
+          <div
+            class="prayer-header-wrapper"
+            style="
+              border-bottom: none;
+              margin-bottom: 1rem;
+              flex-direction: column;
+              gap: 15px;
+            "
+          >
+            <span
+              class="prayer-name"
+              style="color: var(--accent-color); border: none"
+              >حصادك الإيماني</span
+            >
 
-        <div id="tab-main" class="tab-content active">
-          <div class="toggle-container" style="background: rgba(0,0,0,0.1); padding: 5px; border-radius: 20px; width: fit-content; margin: 0 auto 20px;">
-            <button class="filter-btn active" onclick="updateCharts('week')">أسبوعي</button>
-            <button class="filter-btn" onclick="updateCharts('month')">شهري</button>
-          </div>
-
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
-              <div class="stat-info">
-                <h4>نسبة الإنجاز</h4>
-                <span id="period-score">0%</span>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon"><i class="fa-solid fa-fire"></i></div>
-              <div class="stat-info">
-                <h4>أفضل يوم</h4>
-                <span id="best-day">--</span>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon"><i class="fa-solid fa-check-double"></i></div>
-              <div class="stat-info">
-                <h4>أيام الالتزام التام</h4>
-                <span id="perfect-days">0</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="charts-container">
-            <div class="chart-box">
-              <h4><i class="fa-solid fa-arrow-trend-up"></i> تطور أدائك</h4>
-              <canvas id="progressChart"></canvas>
-            </div>
-            <div class="chart-box">
-              <h4><i class="fa-solid fa-scale-balanced"></i> توزيع العبادات</h4>
-              <canvas id="distributionChart"></canvas>
-            </div>
-          </div>
-
-          <div class="analysis-grid">
-            <div class="analysis-box strength">
-              <h4><i class="fa-solid fa-thumbs-up"></i> أكثر ما حافظت عليه</h4>
-              <ul id="top-habits-list"><li>جاري التحليل...</li></ul>
-            </div>
-            <div class="analysis-box weakness">
-              <h4><i class="fa-solid fa-triangle-exclamation"></i> يحتاج لتركيز أكبر</h4>
-              <ul id="low-habits-list"><li>جاري التحليل...</li></ul>
-            </div>
-          </div>
-          
-           <div style="display: flex; gap: 10px; margin-top: 2rem;">
-              <button onclick="downloadReport('week')" class="btn-primary" style="flex: 1; background: #4f46e5;">
-                  <i class="fa-solid fa-file-pdf"></i>  تحميل التقرير أسبوعي 
+            <div class="tabs-container">
+              <button class="tab-btn active" onclick="switchTab('main')">
+                الرئيسية
               </button>
-              <button onclick="downloadReport('month')" class="btn-primary" style="flex: 1; background: #0891b2;">
-                  <i class="fa-solid fa-file-contract"></i> تحميل التقرير شهري
+              <button class="tab-btn" onclick="switchTab('daily')">
+                التفاصيل اليومية
               </button>
+              <button class="tab-btn" onclick="switchTab('weekly')">
+                أرشيف الأسابيع
+              </button>
+              <button class="tab-btn" onclick="switchTab('monthly')">
+                أرشيف الشهور
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div id="tab-daily" class="tab-content">
-          <div class="chart-box" style="height: auto; min-height: auto;">
-            <h4><i class="fa-solid fa-table-list"></i> سجل الأيام (مرتب من الأحدث)</h4>
-            <div class="table-responsive">
-              <table class="analytics-table">
-                <thead>
-                  <tr>
-                    <th>التاريخ</th>
-                    <th>اليوم</th>
-                    <th>الإنجاز العام</th>
-                    <th>الصلوات</th>
-                    <th>القرآن</th>
-                    <th>الأذكار</th>
-                    <th>السنن</th>
-                    <th>القيام</th>
-                  </tr>
-                </thead>
-                <tbody id="analytics-table-body">
-                </tbody>
-              </table>
+          <div id="tab-main" class="tab-content active">
+            <div
+              class="toggle-container"
+              style="
+                background: rgba(0, 0, 0, 0.1);
+                padding: 5px;
+                border-radius: 20px;
+                width: fit-content;
+                margin: 0 auto 20px;
+              "
+            >
+              <button class="filter-btn active" onclick="updateCharts('week')">
+                أسبوعي
+              </button>
+              <button class="filter-btn" onclick="updateCharts('month')">
+                شهري
+              </button>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-trophy"></i></div>
+                <div class="stat-info">
+                  <h4>نسبة الإنجاز</h4>
+                  <span id="period-score">0%</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-fire"></i></div>
+                <div class="stat-info">
+                  <h4>أفضل يوم</h4>
+                  <span id="best-day">--</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fa-solid fa-check-double"></i>
+                </div>
+                <div class="stat-info">
+                  <h4>أيام الالتزام التام</h4>
+                  <span id="perfect-days">0</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="charts-container">
+              <div class="chart-box">
+                <h4><i class="fa-solid fa-arrow-trend-up"></i> تطور أدائك</h4>
+                <canvas id="progressChart"></canvas>
+              </div>
+              <div class="chart-box">
+                <h4>
+                  <i class="fa-solid fa-scale-balanced"></i> توزيع العبادات
+                </h4>
+                <canvas id="distributionChart"></canvas>
+              </div>
+            </div>
+
+            <div class="analysis-grid">
+              <div class="analysis-box strength">
+                <h4>
+                  <i class="fa-solid fa-thumbs-up"></i> أكثر ما حافظت عليه
+                </h4>
+                <ul id="top-habits-list">
+                  <li>جاري التحليل...</li>
+                </ul>
+              </div>
+              <div class="analysis-box weakness">
+                <h4>
+                  <i class="fa-solid fa-triangle-exclamation"></i> يحتاج لتركيز
+                  أكبر
+                </h4>
+                <ul id="low-habits-list">
+                  <li>جاري التحليل...</li>
+                </ul>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 2rem">
+              <button
+                onclick="downloadReport('week')"
+                class="btn-primary"
+                style="flex: 1; background: #4f46e5"
+              >
+                <i class="fa-solid fa-file-pdf"></i> تحميل التقرير أسبوعي
+              </button>
+              <button
+                onclick="downloadReport('month')"
+                class="btn-primary"
+                style="flex: 1; background: #0891b2"
+              >
+                <i class="fa-solid fa-file-contract"></i> تحميل التقرير شهري
+              </button>
+            </div>
+          </div>
+
+          <div id="tab-daily" class="tab-content">
+            <div class="chart-box" style="height: auto; min-height: auto">
+              <h4>
+                <i class="fa-solid fa-table-list"></i> سجل الأيام (مرتب من
+                الأحدث)
+              </h4>
+              <div class="table-responsive">
+                <table class="analytics-table">
+                  <thead>
+                    <tr>
+                      <th>التاريخ</th>
+                      <th>اليوم</th>
+                      <th>الإنجاز العام</th>
+                      <th>الصلوات</th>
+                      <th>القرآن</th>
+                      <th>الأذكار</th>
+                      <th>السنن</th>
+                      <th>القيام</th>
+                    </tr>
+                  </thead>
+                  <tbody id="analytics-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div id="tab-weekly" class="tab-content">
+            <div class="chart-box auto-height">
+              <h4>
+                <i class="fa-solid fa-calendar-week"></i> أرشيف الأسابيع (من
+                الجمعة للخميس)
+              </h4>
+              <div class="table-responsive">
+                <table class="analytics-table">
+                  <thead>
+                    <tr>
+                      <th>الأسبوع</th>
+                      <th>الفترة</th>
+                      <th>متوسط الإنجاز</th>
+                      <th>التقييم</th>
+                    </tr>
+                  </thead>
+                  <tbody id="weekly-archive-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div id="tab-monthly" class="tab-content">
+            <div class="chart-box auto-height">
+              <h4><i class="fa-solid fa-calendar-days"></i> أرشيف الشهور</h4>
+              <div class="table-responsive">
+                <table class="analytics-table">
+                  <thead>
+                    <tr>
+                      <th>الشهر</th>
+                      <th>متوسط الإنجاز</th>
+                      <th>التقييم</th>
+                    </tr>
+                  </thead>
+                  <tbody id="monthly-archive-body"></tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+    </section>
 
-        <div id="tab-weekly" class="tab-content">
-          <div class="chart-box auto-height">
-            <h4><i class="fa-solid fa-calendar-week"></i> أرشيف الأسابيع (من الجمعة للخميس)</h4>
-            <div class="table-responsive">
-              <table class="analytics-table">
-                <thead>
-                  <tr>
-                    <th>الأسبوع</th>
-                    <th>الفترة</th>
-                    <th>متوسط الإنجاز</th>
-                    <th>التقييم</th>
-                  </tr>
-                </thead>
-                <tbody id="weekly-archive-body">
-                </tbody>
-              </table>
-            </div>
-          </div>
+    <div class="footer-wrapper mobile-page-section" data-mobile-page="home">
+      <footer class="container glass-footer">
+        <div class="footer-brand">
+          <h3><img src="assets/images/logo.png" alt="Logo" /></h3>
+          <p class="footer-note">لا تنسونا من صالح دعائكم</p>
         </div>
-
-        <div id="tab-monthly" class="tab-content">
-          <div class="chart-box auto-height">
-            <h4><i class="fa-solid fa-calendar-days"></i> أرشيف الشهور</h4>
-            <div class="table-responsive">
-              <table class="analytics-table">
-                <thead>
-                  <tr>
-                    <th>الشهر</th>
-                    <th>متوسط الإنجاز</th>
-                    <th>التقييم</th>
-                  </tr>
-                </thead>
-                <tbody id="monthly-archive-body">
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <div class="footer-wrapper mobile-page-section" data-mobile-page="home">
-    <footer class="container glass-footer">
-      <div class="footer-brand">
-        <h3><img src="assets/images/logo.png" alt="Logo"></h3>
-        <p class="footer-note">لا تنسونا من صالح دعائكم</p>
-      </div>
-    </footer>
-  </div>
-
-  <nav id="mobile-app-nav" class="mobile-app-nav" aria-label="شريط التنقل السفلي">
-    <span id="mobile-nav-indicator" class="mobile-nav-indicator" aria-hidden="true"></span>
-    <button class="mobile-nav-item active" data-page="home" aria-label="الرئيسية">
-      <i class="fa-solid fa-house"></i>
-      <span>الرئيسية</span>
-    </button>
-    <button class="mobile-nav-item" data-page="ibadat" aria-label="العبادات">
-      <i class="fa-solid fa-list-check"></i>
-      <span>العبادات</span>
-    </button>
-    <button class="mobile-nav-item" data-page="warnings" aria-label="المهلكات">
-      <i class="fa-solid fa-triangle-exclamation"></i>
-      <span>المهلكات</span>
-    </button>
-    <button class="mobile-nav-item" data-page="analytics" aria-label="الإحصائيات">
-      <i class="fa-solid fa-chart-pie"></i>
-      <span>الإحصائيات</span>
-    </button>
-  </nav>
-
-  <div id="report-template-container" style="position: absolute; left: -9999px; top: 0; width: 800px;">
-  <div id="pdf-content" class="pdf-page">
-    
-    <div class="pdf-header">
-      <div class="header-logo">
-        <img src="assets/images/logo.png" alt="Logo" style="height: 60px;"> </div>
-      <div class="header-info">
-        <h1 class="pdf-title">تقرير حصاد الأعمال</h1>
-        <p class="pdf-subtitle" id="pdf-period-text">تقرير أسبوعي | من ... إلى ...</p>
-      </div>
-      <div class="header-score">
-        <span>الإنجاز العام</span>
-        <div class="score-circle" id="pdf-total-score">0%</div>
-      </div>
+      </footer>
     </div>
 
-    <div class="pdf-summary-grid">
-      <div class="summary-card">
-        <span class="label">أيام الالتزام</span>
-        <span class="value" id="pdf-perfect-days">0</span>
-      </div>
-      <div class="summary-card">
-        <span class="label">أفضل يوم</span>
-        <span class="value" id="pdf-best-day">-</span>
-      </div>
-      <div class="summary-card">
-        <span class="label">معدل الصلوات</span>
-        <span class="value" id="pdf-prayer-avg">0%</span>
-      </div>
-      <div class="summary-card">
-        <span class="label">معدل القرآن</span>
-        <span class="value" id="pdf-quran-avg">0%</span>
-      </div>
-    </div>
-
-    <div class="pdf-charts-section">
-      <h3><i class="fa-solid fa-chart-pie"></i> نظرة عامة بيانية</h3>
-      <div class="charts-wrapper">
-        <img id="pdf-chart-line" class="pdf-chart-img" />
-        <img id="pdf-chart-radar" class="pdf-chart-img" />
-      </div>
-    </div>
-
-    <div class="pdf-details-section">
-      <h3><i class="fa-solid fa-list-check"></i> تفاصيل الأيام</h3>
-      <table class="pdf-table">
-        <thead>
-          <tr>
-            <th width="15%">التاريخ</th>
-            <th width="10%">اليوم</th>
-            <th width="10%">النسبة</th>
-            <th width="40%">أبرز الإنجازات</th>
-            <th width="25%">ملاحظات / تقصير</th>
-          </tr>
-        </thead>
-        <tbody id="pdf-daily-rows">
-          </tbody>
-      </table>
-    </div>
-
-    <div class="pdf-footer">
-      <p>تم استخراج هذا التقرير من منصة "محاسبة النفس" - اللهم اجعل أعمالنا خالصة لوجهك الكريم.</p>
-      <p id="pdf-generated-date"></p>
-    </div>
-
-  </div>
-</div>
-
-<div id="smart-report-modal" class="modal-overlay hidden" style="z-index: 9999;">
-  <div class="liquid-modal" style="max-width: 400px; text-align: center;">
-    <div class="modal-header" style="justify-content: center; flex-direction: column;">
-      <div id="smart-icon" style="font-size: 3rem; margin-bottom: 10px;">📊</div>
-      <h3 id="smart-title" style="margin: 0;">تقريرك اليومي</h3>
-    </div>
-    
-    <div class="modal-body">
-      <p id="smart-message" style="font-size: 1.1rem; line-height: 1.6; color: var(--text-primary); margin-bottom: 15px;">
-        جاري تحليل أدائك...
-      </p>
-      
-      <div id="smart-details" style="background: rgba(0,0,0,0.05); padding: 10px; border-radius: 10px; font-size: 0.9rem; text-align: right;">
-        </div>
-    </div>
-
-    <div class="modal-footer">
-      <button onclick="document.getElementById('smart-report-modal').classList.add('hidden')" class="btn-primary" style="width: 100%;">
-        استعن بالله وأكمل
+    <nav
+      id="mobile-app-nav"
+      class="mobile-app-nav"
+      aria-label="شريط التنقل السفلي"
+    >
+      <span
+        id="mobile-nav-indicator"
+        class="mobile-nav-indicator"
+        aria-hidden="true"
+      ></span>
+      <button
+        class="mobile-nav-item active"
+        data-page="home"
+        aria-label="الرئيسية"
+      >
+        <i class="fa-solid fa-house"></i>
+        <span>الرئيسية</span>
       </button>
+      <button class="mobile-nav-item" data-page="ibadat" aria-label="العبادات">
+        <i class="fa-solid fa-list-check"></i>
+        <span>العبادات</span>
+      </button>
+      <button
+        class="mobile-nav-item"
+        data-page="warnings"
+        aria-label="المهلكات"
+      >
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>المهلكات</span>
+      </button>
+      <button
+        class="mobile-nav-item"
+        data-page="analytics"
+        aria-label="الإحصائيات"
+      >
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>الإحصائيات</span>
+      </button>
+    </nav>
+
+    <div
+      id="report-template-container"
+      style="position: absolute; left: -9999px; top: 0; width: 800px"
+    >
+      <div id="pdf-content" class="pdf-page">
+        <div class="pdf-header">
+          <div class="header-logo">
+            <img src="assets/images/logo.png" alt="Logo" style="height: 60px" />
+          </div>
+          <div class="header-info">
+            <h1 class="pdf-title">تقرير حصاد الأعمال</h1>
+            <p class="pdf-subtitle" id="pdf-period-text">
+              تقرير أسبوعي | من ... إلى ...
+            </p>
+          </div>
+          <div class="header-score">
+            <span>الإنجاز العام</span>
+            <div class="score-circle" id="pdf-total-score">0%</div>
+          </div>
+        </div>
+
+        <div class="pdf-summary-grid">
+          <div class="summary-card">
+            <span class="label">أيام الالتزام</span>
+            <span class="value" id="pdf-perfect-days">0</span>
+          </div>
+          <div class="summary-card">
+            <span class="label">أفضل يوم</span>
+            <span class="value" id="pdf-best-day">-</span>
+          </div>
+          <div class="summary-card">
+            <span class="label">معدل الصلوات</span>
+            <span class="value" id="pdf-prayer-avg">0%</span>
+          </div>
+          <div class="summary-card">
+            <span class="label">معدل القرآن</span>
+            <span class="value" id="pdf-quran-avg">0%</span>
+          </div>
+        </div>
+
+        <div class="pdf-charts-section">
+          <h3><i class="fa-solid fa-chart-pie"></i> نظرة عامة بيانية</h3>
+          <div class="charts-wrapper">
+            <img id="pdf-chart-line" class="pdf-chart-img" />
+            <img id="pdf-chart-radar" class="pdf-chart-img" />
+          </div>
+        </div>
+
+        <div class="pdf-details-section">
+          <h3><i class="fa-solid fa-list-check"></i> تفاصيل الأيام</h3>
+          <table class="pdf-table">
+            <thead>
+              <tr>
+                <th width="15%">التاريخ</th>
+                <th width="10%">اليوم</th>
+                <th width="10%">النسبة</th>
+                <th width="40%">أبرز الإنجازات</th>
+                <th width="25%">ملاحظات / تقصير</th>
+              </tr>
+            </thead>
+            <tbody id="pdf-daily-rows"></tbody>
+          </table>
+        </div>
+
+        <div class="pdf-footer">
+          <p>
+            تم استخراج هذا التقرير من منصة "محاسبة النفس" - اللهم اجعل أعمالنا
+            خالصة لوجهك الكريم.
+          </p>
+          <p id="pdf-generated-date"></p>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
+    <div
+      id="smart-report-modal"
+      class="modal-overlay hidden"
+      style="z-index: 9999"
+    >
+      <div class="liquid-modal" style="max-width: 400px; text-align: center">
+        <div
+          class="modal-header"
+          style="justify-content: center; flex-direction: column"
+        >
+          <div id="smart-icon" style="font-size: 3rem; margin-bottom: 10px">
+            📊
+          </div>
+          <h3 id="smart-title" style="margin: 0">تقريرك اليومي</h3>
+        </div>
 
+        <div class="modal-body">
+          <p
+            id="smart-message"
+            style="
+              font-size: 1.1rem;
+              line-height: 1.6;
+              color: var(--text-primary);
+              margin-bottom: 15px;
+            "
+          >
+            جاري تحليل أدائك...
+          </p>
 
-  <script src="assets/js/config/firebase-config.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js" defer></script>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
-  <script src="assets/js/app.js?v=20260221c" defer></script>
-  <script src="assets/js/sw-register.js?v=20260221c" defer></script>
-</body>
+          <div
+            id="smart-details"
+            style="
+              background: rgba(0, 0, 0, 0.05);
+              padding: 10px;
+              border-radius: 10px;
+              font-size: 0.9rem;
+              text-align: right;
+            "
+          ></div>
+        </div>
 
+        <div class="modal-footer">
+          <button
+            onclick="
+              document
+                .getElementById('smart-report-modal')
+                .classList.add('hidden')
+            "
+            class="btn-primary"
+            style="width: 100%"
+          >
+            استعن بالله وأكمل
+          </button>
+        </div>
+      </div>
+    </div>
 
+    <script src="assets/js/config/firebase-config.js" defer></script>
+    <script
+      src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"
+      defer
+    ></script>
+    <script
+      src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"
+      defer
+    ></script>
+    <script
+      src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"
+      defer
+    ></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+    <script src="assets/js/app.js?v=20260221c" defer></script>
+    <script src="assets/js/sw-register.js?v=20260221c" defer></script>
+  </body>
 </html>
